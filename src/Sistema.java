@@ -8,6 +8,13 @@ public class Sistema {
 
 		LoginSistema system = new LoginSistema();
 		system.systemInit();
+		TestSqlite test = new TestSqlite();
+		try {
+			test.test();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }
