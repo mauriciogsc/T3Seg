@@ -22,13 +22,15 @@ import java.sql.Connection;
 
 
          statement.executeUpdate("DROP TABLE IF EXISTS person");
-         statement.executeUpdate("CREATE TABLE person (id INTEGER, name STRING)");
+         statement.executeUpdate("CREATE TABLE usuario (id INTEGER, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER)");
+         statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER, descricao STRING)");
+         statement.executeUpdate("CREATE TABLE Mensagens (id INTEGER, data DATE, MRId INTEGER, UsuarioId INTEGER");
          int ids [] = {1,2,3,4,5};
          String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
-         for(int i=0;i<ids.length;i++){
-              statement.executeUpdate("INSERT INTO person values(' "+ids[i]+"', '"+names[i]+"')");   
-         }
+         //for(int i=0;i<ids.length;i++){
+         //     statement.executeUpdate("INSERT INTO person values(' "+ids[i]+"', '"+names[i]+"')");   
+         //}
 
          //statement.executeUpdate("UPDATE person SET name='Peter' WHERE id='1'");
          //statement.executeUpdate("DELETE FROM person WHERE id='1'");
@@ -41,7 +43,7 @@ import java.sql.Connection;
          //     System.out.println("id = " + resultSet.getInt("id"));
          //  }
          // }
-
+      }
      catch(SQLException e){  System.err.println(e.getMessage()); }       
       finally {         
             try {
