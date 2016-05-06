@@ -23,7 +23,6 @@ import java.sql.Connection;
 
          statement.executeUpdate("DROP TABLE IF EXISTS person");
          statement.executeUpdate("CREATE TABLE person (id INTEGER, name STRING)");
-
          int ids [] = {1,2,3,4,5};
          String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
@@ -34,14 +33,14 @@ import java.sql.Connection;
          //statement.executeUpdate("UPDATE person SET name='Peter' WHERE id='1'");
          //statement.executeUpdate("DELETE FROM person WHERE id='1'");
 
-           ResultSet resultSet = statement.executeQuery("SELECT * from person");
-           while(resultSet.next())
-           {
-              // iterate & read the result set
-              System.out.println("name = " + resultSet.getString("name"));
-              System.out.println("id = " + resultSet.getInt("id"));
-           }
-          }
+         // ResultSet resultSet = statement.executeQuery("SELECT * from person");
+         //  while(resultSet.next())
+         //  {
+         //     // iterate & read the result set
+         //     System.out.println("name = " + resultSet.getString("name"));
+         //     System.out.println("id = " + resultSet.getInt("id"));
+         //  }
+         // }
 
      catch(SQLException e){  System.err.println(e.getMessage()); }       
       finally {         
