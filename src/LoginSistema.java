@@ -20,28 +20,16 @@ public class LoginSistema {
 		login = jtf.getText();
 
 		if (login == null || login.equals("")) JOptionPane.showMessageDialog(null, "Você não inseriu seu login.");
-		/*
-		else 
-		{
-			JOptionPane.showConfirmDialog(null,
-					new Object[]{labelPsw, jpf}, "Password:",
-					JOptionPane.OK_CANCEL_OPTION); 
+		else{
 
-			password = new String(jpf.getPassword());
+			VirtualKeyboard typingTutor = new VirtualKeyboard();    // creates TypingTutor
 
-			System.out.println("Login: "+ login);
-			System.out.println("Senha: "+ password);
+			typingTutor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			typingTutor.setLocation(300, 300);
+			typingTutor.setSize(400, 200);      // set dimensions of window
+			typingTutor.setVisible(true);
+			JFrame frame = new JFrame();
 		}
-		 */
-
-		VirtualKeyboard typingTutor = new VirtualKeyboard();    // creates TypingTutor
-
-		typingTutor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		typingTutor.setLocation(300, 300);
-		typingTutor.setSize(400, 200);      // set dimensions of window
-		typingTutor.setVisible(true);
-		JFrame frame = new JFrame();
-
 	}
 
 }
