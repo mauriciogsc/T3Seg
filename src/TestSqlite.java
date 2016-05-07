@@ -21,12 +21,15 @@ import java.sql.Connection;
          statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
 
-         statement.executeUpdate("DROP TABLE IF EXISTS person");
-         statement.executeUpdate("CREATE TABLE usuario (id INTEGER, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER)");
-         statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER, descricao STRING)");
-         statement.executeUpdate("CREATE TABLE Mensagens (id INTEGER, data DATE, MRId INTEGER, UsuarioId INTEGER");
-         int ids [] = {1,2,3,4,5};
-         String names [] = {"Peter","Pallar","William","Paul","James Bond"};
+         statement.executeUpdate("DROP TABLE IF EXISTS usuario");
+         statement.executeUpdate("DROP TABLE IF EXISTS MensagensDeRegistro");
+         statement.executeUpdate("DROP TABLE IF EXISTS usuario");
+         statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER)");
+         statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER PRIMARY KEY, descricao STRING)");
+         statement.executeUpdate("CREATE TABLE Mensagens (data TEXT, MRId INTEGER, UsuarioId INTEGER"+
+         ", FOREIGN KEY(UsuarioId) REFERENCES usuario(id), FOREIGN KEY(MRId) REFERENCES MensagensDeRegistro(id)");
+         //int ids [] = {1,2,3,4,5};
+         //String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
          //for(int i=0;i<ids.length;i++){
          //     statement.executeUpdate("INSERT INTO person values(' "+ids[i]+"', '"+names[i]+"')");   
