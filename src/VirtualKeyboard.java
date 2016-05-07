@@ -88,9 +88,9 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 			
 			if(j%2!=0)
 			{
-				keys.add(randoms.get(0) + " ou "+ randoms.get(1));
+				keys.add(numbers.get(randoms.get(0)) + " ou "+ numbers.get(randoms.get(1)));
 				
-				System.out.println(randoms.get(0) + " ou "+ randoms.get(1));
+				System.out.println(numbers.get(randoms.get(0)) + " ou "+ numbers.get(randoms.get(1)));
 				
 				numbers.remove(randoms.get(0));
 				numbers.remove(randoms.get(1));
