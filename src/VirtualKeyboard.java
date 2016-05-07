@@ -4,6 +4,14 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,10 +27,13 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	private JPasswordField passwordField;
 	private JLabel label;
 	private String password = new String();
+	private String fullPassword = new String();
 	private boolean isFreeToType = true;
 	private JLabel warning;
 
-	public VirtualKeyboard()
+	private ResultSet currentUser;
+
+	public VirtualKeyboard(ResultSet user)
 	{
 		super("Virtual Keyboard");
 
@@ -35,12 +46,15 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 		passwordField.setEditable(true);
 		add(passwordField , BorderLayout.NORTH);
+		
 
-		b0 = new JButton( "0 ou 1" ); add(b0); b0.addActionListener(this);
-		b1 = new JButton( "2 ou 3" ); add(b1); b1.addActionListener(this);
-		b2 = new JButton( "4 ou 5" ); add(b2); b2.addActionListener(this);
-		b3 = new JButton( "6 ou 7" ); add(b3); b3.addActionListener(this);
-		b4 = new JButton( "8 ou 9" ); add(b4); b4.addActionListener(this);
+		List<String> lst = this.generateKeys();
+
+		b0 = new JButton( lst.get(0) ); add(b0); b0.addActionListener(this);
+		b1 = new JButton( lst.get(1) ); add(b1); b1.addActionListener(this);
+		b2 = new JButton( lst.get(2) ); add(b2); b2.addActionListener(this);
+		b3 = new JButton( lst.get(3) ); add(b3); b3.addActionListener(this);
+		b4 = new JButton( lst.get(4) ); add(b4); b4.addActionListener(this);
 
 		Backspace = new JButton("Backspace"); add(Backspace); Backspace.addActionListener(this);
 
@@ -50,6 +64,41 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 		warning = new JLabel("Sua senha possui uma sequência ou uma repetição. Favor entrar com uma nova senha");
 		warning.setForeground(Color.red);
 		add(warning); warning.setVisible(false);
+
+		// pegando o usuario
+		this.currentUser = user;
+	}
+
+	public List<String> generateKeys()
+	{
+		List<String> keys = new ArrayList<String>();
+		
+		List<Integer> numbers = new ArrayList<Integer>();
+		List<Integer> randoms = new ArrayList<Integer>();
+
+		for(int i=0; i <10; i++)
+			numbers.add(i);
+
+		Random randomGenerator = new Random();
+
+		for(int j=0; j<10; j++)
+		{
+			int ran = randomGenerator.nextInt(numbers.size());
+			randoms.add(ran);
+			
+			if(j%2!=0)
+			{
+				keys.add(randoms.get(0) + " ou "+ randoms.get(1));
+				
+				System.out.println(randoms.get(0) + " ou "+ randoms.get(1));
+				
+				numbers.remove(randoms.get(0));
+				numbers.remove(randoms.get(1));
+				
+				randoms.clear();
+			}
+		}
+		return keys;
 	}
 
 	@Override
@@ -65,19 +114,46 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 			{
 				password = (String) password.subSequence(0, (password.length()-1));
 				passwordField.setText(password);
+
+				fullPassword = (String) fullPassword.substring(0, (fullPassword.length()-6));
 				isFreeToType = true;
 			}
 		}
 		else if (button.equals("Entrar"))
-		{
+		{		
 			// entrar no sistema
+			Connection connection = null;
+			try
+			{
+				// create a database connection
+				connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+				Statement statement = connection.createStatement();
+				statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+				// pegar salt do usu�rio corrente
+				String salt = currentUser.getString("salt");
+
+				// for(int = 0; i<)
+			}
+			catch(SQLException ex){  System.err.println(ex.getMessage()); }       
+			finally {         
+				try {
+					if(connection != null)
+						connection.close();
+				}
+				catch(SQLException ex) {  // Use SQLException class instead.          
+					System.err.println(ex); 
+				}
+			}
+
 		}
 		else if (isFreeToType) // senha menor que 10, eh possivle add mais digitos
 		{
 			// pegar ultimo e novo digito
 			int temp, newDigit;
 
-			// realizo a checagem se não for o primeiro digito
+			// realizo a checagem se nao for o primeiro digito
 			if(!password.equals(""))
 			{
 				temp = Integer.parseInt(password.substring(password.length()-1));
@@ -95,8 +171,9 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 			if (isFreeToAdd == true)
 			{
 				warning.setVisible(false);
-				
+
 				password+=button.substring(5);
+				fullPassword+=button; // pegar o texto todo
 
 				if (password.length() == 8) go.setEnabled(true);
 

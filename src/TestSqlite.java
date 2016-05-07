@@ -60,7 +60,7 @@ public class TestSqlite
 				System.err.println(e); 
 			}
 		}
-		
+
 		// administrador
 		createAdmin();
 	}
@@ -68,30 +68,57 @@ public class TestSqlite
 	public void createUser(String login, String pswd) throws SQLException, NoSuchAlgorithmException
 	{
 		// create a database connection
-		Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+		Connection connection = null;
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-		Statement statement = connection.createStatement();
-		statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-		String salt = getSalt();	
-		String password = setPsw(pswd + salt);
+			String salt = getSalt();	
+			String password = setPsw(pswd + salt);
 
-		statement.executeUpdate("INSERT INTO person values('"+login+"', '"+password+"', '"+salt+"', access, attempts)");
+			statement.executeUpdate("INSERT INTO person values('"+login+"', '"+password+"', '"+salt+"', access, attempts)");
+		}
+		catch(SQLException e){  System.err.println(e.getMessage()); }       
+		finally {         
+			try {
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
+		}
 	}
 
 	public void createAdmin() throws SQLException, NoSuchAlgorithmException
 	{
 		// create a database connection
-		Connection connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+		Connection connection = null;
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-		Statement statement = connection.createStatement();
-		statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-		String salt = getSalt();	
-		String password = setPsw("adminpsw" + salt);		
-		statement.executeUpdate("INSERT INTO person values('admin', '"+password+"', '"+salt+"', access, attempts)");
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			
+			String salt = getSalt();	
+			String password = setPsw("adminpsw" + salt);		
+			statement.executeUpdate("INSERT INTO person values('admin', '"+password+"', '"+salt+"', access, attempts)");
+		}
+		catch(SQLException e){  System.err.println(e.getMessage()); }       
+		finally {         
+			try {
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
+		}
+		
 	}
-	
+
 	public String getSalt()
 	{
 		int num;
@@ -106,26 +133,26 @@ public class TestSqlite
 		}
 		return salt;
 	}
-	
+
 	public String setPsw(String psw) throws NoSuchAlgorithmException
 	{		
 		String hex = "";
 		byte[] texto = new byte[psw.length()];
-		
-		//transformando o conteudo do arquivo em digest do tipo informado
-        MessageDigest mDigest = MessageDigest.getInstance("MD5");
-		
-		//criando o digest e salvando
-        mDigest.update(texto);
-        StringBuffer buf_digest = new StringBuffer();
-        byte[] digest = mDigest.digest();
 
-        //transformando o digest em uma string Hexa
-        for(int j = 0; j < digest.length; j++) {
-            hex = Integer.toHexString(0x0100 + (digest[j] & 0x00FF)).substring(1);
-            buf_digest.append((hex.length() < 2 ? "0" : "") + hex);
-        }
-		
+		//transformando o conteudo do arquivo em digest do tipo informado
+		MessageDigest mDigest = MessageDigest.getInstance("MD5");
+
+		//criando o digest e salvando
+		mDigest.update(texto);
+		StringBuffer buf_digest = new StringBuffer();
+		byte[] digest = mDigest.digest();
+
+		//transformando o digest em uma string Hexa
+		for(int j = 0; j < digest.length; j++) {
+			hex = Integer.toHexString(0x0100 + (digest[j] & 0x00FF)).substring(1);
+			buf_digest.append((hex.length() < 2 ? "0" : "") + hex);
+		}
+
 		return hex;
 	}
 
