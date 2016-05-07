@@ -238,12 +238,17 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				buf_digest.append((hex_senha.length() < 2 ? "0" : "") + hex_senha);
 			}
 
-			if (dbPassword.compareToIgnoreCase(hex_senha) == 0)
+			System.out.println("senha combinação: " + senha);
+			if (dbPassword.compareTo(buf_digest.toString()) == 0)
 			{
+				System.out.println("achou sim");
 				return true;
 			}
 			else
+			{
+				System.out.println("achou mermo nao");
 				return false;
+			}
 		} 
 		else
 		{

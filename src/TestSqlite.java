@@ -103,7 +103,7 @@ public class TestSqlite
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			
 			String salt = getSalt();	
-			String password = setPsw("adminpsw" + salt);
+			String password = setPsw("03592419" + salt);
 			
 			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas) values('admin', '"+password+"', '"+salt+"', 0, 0)");
 		}
@@ -154,7 +154,7 @@ public class TestSqlite
 			buf_digest.append((hex.length() < 2 ? "0" : "") + hex);
 		}
 
-		return hex;
+		return buf_digest.toString();
 	}
 
 }
