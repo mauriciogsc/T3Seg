@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -46,7 +48,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 		passwordField.setEditable(true);
 		add(passwordField , BorderLayout.NORTH);
-		
+
 
 		List<String> lst = this.generateKeys();
 
@@ -72,10 +74,9 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	public List<String> generateKeys()
 	{
 		List<String> keys = new ArrayList<String>();
-		
+
 		List<Integer> numbers = new ArrayList<Integer>();
 		List<Integer> randoms = new ArrayList<Integer>();
-
 		for(int i=0; i <10; i++)
 			numbers.add(i);
 
@@ -83,20 +84,18 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 		for(int j=0; j<10; j++)
 		{
-			int ran = randomGenerator.nextInt(numbers.size());
-			randoms.add(ran);
-			
+			int ran = randomGenerator.nextInt(numbers.size());                                                                        
+			randoms.add(numbers.get(ran));
 			if(j%2!=0)
 			{
-				keys.add(numbers.get(randoms.get(0)) + " ou "+ numbers.get(randoms.get(1)));
-				
-				System.out.println(numbers.get(randoms.get(0)) + " ou "+ numbers.get(randoms.get(1)));
-				
-				numbers.remove(randoms.get(0));
-				numbers.remove(randoms.get(1));
-				
+				keys.add(randoms.get(0) + " ou "+ randoms.get(1));
+
+				System.out.println(randoms.get(0) + " ou "+ randoms.get(1));
 				randoms.clear();
 			}
+
+			numbers.remove(ran);
+
 		}
 		return keys;
 	}
@@ -133,10 +132,13 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 				// pegar salt do usuário corrente
 				String salt = currentUser.getString("salt");
+				String currentPsw = currentUser.getString("senha");
 
-				// for(int = 0; i<)
+				int size = password.length();
+				String currentpsw = new String();
+				generateCombinations(0, 0, size, currentpsw, fullPassword, salt, currentpsw);
 			}
-			catch(SQLException ex){  System.err.println(ex.getMessage()); }       
+			catch(SQLException | NoSuchAlgorithmException ex){  System.err.println(ex.getMessage()); }       
 			finally {         
 				try {
 					if(connection != null)
@@ -180,6 +182,51 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				if (password.length() == 10) isFreeToType = false;
 			}
 			passwordField.setText(password);
+		}
+	}
+
+	public void generateCombinations(int i,
+			int index,
+			int len,
+			String senha,
+			String s,
+			String salt,
+			String dbPassword) throws NoSuchAlgorithmException
+	{				 
+		senha+=s.charAt(5*index+ 6*i);
+
+		if(i==len)
+		{
+			// senha aqui eh uma combinacao
+			senha.concat(salt);
+
+			String hex_senha = "";
+			byte[] texto = new byte[senha.length()];
+
+			//transformando o conteudo do arquivo em digest do tipo informado
+			MessageDigest mDigest = MessageDigest.getInstance("MD5");
+
+			//criando o digest e salvando
+			mDigest.update(texto);
+			StringBuffer buf_digest = new StringBuffer();
+			byte[] digest = mDigest.digest();
+
+			//transformando o digest em uma string Hexa
+			for(int j = 0; j < digest.length; j++) {
+				hex_senha = Integer.toHexString(0x0100 + (digest[j] & 0x00FF)).substring(1);
+				buf_digest.append((hex_senha.length() < 2 ? "0" : "") + hex_senha);
+			}
+
+			if (dbPassword.compareToIgnoreCase(hex_senha) == 0)
+			{
+				
+			}
+
+		} 
+		else
+		{
+			generateCombinations(i+1,0,len,senha,s, salt, dbPassword);
+			generateCombinations(i+1,1,len,senha,s, salt, dbPassword);
 		}
 	}
 }

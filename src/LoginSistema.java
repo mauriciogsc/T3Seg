@@ -40,11 +40,11 @@ public class LoginSistema {
 				Statement statement = connection.createStatement();
 				statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-				ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = ' "+login+"'");
+				ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+login+"'");
 				if(resultSet.next()) // false se o login n existir na tabela
 				{
 					// iterate & read the result set
-					System.out.println("name = " + resultSet.getString("name"));
+					System.out.println("name = " + resultSet.getString("login"));
 					System.out.println("id = " + resultSet.getInt("id"));
 
 					VirtualKeyboard typingTutor = new VirtualKeyboard(resultSet);    // creates TypingTutor

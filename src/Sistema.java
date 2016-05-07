@@ -9,9 +9,8 @@ public class Sistema {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, SQLException {
 
-		LoginSistema system = new LoginSistema();
-		system.systemInit();
-		TestSqlite test = new TestSqlite();
+		
+		TestSqlite test = new TestSqlite();		
 		
 		try {
 			test.createDatabase();
@@ -20,5 +19,7 @@ public class Sistema {
 			e.printStackTrace();
 		}
 		
+		LoginSistema system = new LoginSistema();
+		system.systemInit();
 	}
 }

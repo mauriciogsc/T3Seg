@@ -30,7 +30,7 @@ public class TestSqlite
 			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER)");
 			statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER PRIMARY KEY, descricao STRING)");
 			statement.executeUpdate("CREATE TABLE Mensagens (data TEXT, MRId INTEGER, UsuarioId INTEGER"+
-					", FOREIGN KEY(UsuarioId) REFERENCES usuario(id), FOREIGN KEY(MRId) REFERENCES MensagensDeRegistro(id)");
+					", FOREIGN KEY(UsuarioId) REFERENCES usuario(id), FOREIGN KEY(MRId) REFERENCES MensagensDeRegistro(id))");
 			//int ids [] = {1,2,3,4,5};
 			//String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
@@ -78,7 +78,7 @@ public class TestSqlite
 			String salt = getSalt();	
 			String password = setPsw(pswd + salt);
 
-			statement.executeUpdate("INSERT INTO person values('"+login+"', '"+password+"', '"+salt+"', access, attempts)");
+			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas) values('"+login+"', '"+password+"', '"+salt+"', 0, 0)");
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
@@ -104,7 +104,7 @@ public class TestSqlite
 			
 			String salt = getSalt();	
 			String password = setPsw("adminpsw" + salt);		
-			statement.executeUpdate("INSERT INTO person values('admin', '"+password+"', '"+salt+"', access, attempts)");
+			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas) values('admin', '"+password+"', '"+salt+"', 0, 0)");
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
