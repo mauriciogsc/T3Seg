@@ -34,8 +34,9 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	private JLabel warning;
 
 	private ResultSet currentUser;
+	private String user;
 
-	public VirtualKeyboard(ResultSet user)
+	public VirtualKeyboard(String user)
 	{
 		super("Virtual Keyboard");
 
@@ -68,7 +69,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 		add(warning); warning.setVisible(false);
 
 		// pegando o usuario
-		this.currentUser = user;
+		this.user = user;
 	}
 
 	public List<String> generateKeys()
@@ -90,7 +91,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 			{
 				keys.add(randoms.get(0) + " ou "+ randoms.get(1));
 
-				System.out.println(randoms.get(0) + " ou "+ randoms.get(1));
 				randoms.clear();
 			}
 
@@ -130,13 +130,33 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				Statement statement = connection.createStatement();
 				statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-				// pegar salt do usuário corrente
-				String salt = currentUser.getString("salt");
-				String currentPsw = currentUser.getString("senha");
+				currentUser = statement.executeQuery("SELECT * from usuario where login = '"+user+"'");
+				if(currentUser.next())
+				{
 
-				int size = password.length();
-				String currentpsw = new String();
-				generateCombinations(0, 0, size, currentpsw, fullPassword, salt, currentpsw);
+					// pegar salt do usuário corrente
+					String salt = currentUser.getString("salt");
+					String currentPsw = currentUser.getString("senha");
+
+					int size = password.length();
+					String senhaAtual="";
+					boolean status = generateCombinations(0, 0, size, senhaAtual, fullPassword, salt, currentPsw);
+
+					if (!status)
+					{
+						System.out.println("NÃO HABEMUS ACESSO");
+						String acessos = Integer.toString(currentUser.getInt("totalDeAcessos")+1);
+						statement.executeUpdate("UPDATE usuario SET totalDeAcessos= '"+acessos+"' where login='"+currentUser.getString("login")+"'");
+					}
+					else
+					{
+						System.out.println("HABEMUS ACESSO");
+					}
+				}
+				else
+				{
+					System.out.println("ERROR");
+				}
 			}
 			catch(SQLException | NoSuchAlgorithmException ex){  System.err.println(ex.getMessage()); }       
 			finally {         
@@ -151,7 +171,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 		}
 		else if (isFreeToType) // senha menor que 10, eh possivle add mais digitos
-		{
+		{/*
 			// pegar ultimo e novo digito
 			int temp, newDigit;
 
@@ -169,7 +189,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					password = "";
 					warning.setVisible(true);
 				}
-			}
+			}*/
 			if (isFreeToAdd == true)
 			{
 				warning.setVisible(false);
@@ -185,7 +205,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 		}
 	}
 
-	public void generateCombinations(int i,
+	public boolean generateCombinations(int i,
 			int index,
 			int len,
 			String senha,
@@ -195,18 +215,19 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	{				 
 		senha+=s.charAt(5*index+ 6*i);
 
-		if(i==len)
+		if(i==len-1)
 		{
 			// senha aqui eh uma combinacao
-			senha.concat(salt);
+			senha+=salt;
 
 			String hex_senha = "";
-			byte[] texto = new byte[senha.length()];
+			byte[] texto = new byte[(int)senha.getBytes().length];
 
 			//transformando o conteudo do arquivo em digest do tipo informado
 			MessageDigest mDigest = MessageDigest.getInstance("MD5");
 
 			//criando o digest e salvando
+			texto = senha.getBytes();
 			mDigest.update(texto);
 			StringBuffer buf_digest = new StringBuffer();
 			byte[] digest = mDigest.digest();
@@ -219,14 +240,19 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 			if (dbPassword.compareToIgnoreCase(hex_senha) == 0)
 			{
-				
+				return true;
 			}
-
+			else
+				return false;
 		} 
 		else
 		{
-			generateCombinations(i+1,0,len,senha,s, salt, dbPassword);
-			generateCombinations(i+1,1,len,senha,s, salt, dbPassword);
+			if(generateCombinations(i+1,0,len,senha,s, salt, dbPassword))
+				return true;
+			if(generateCombinations(i+1,1,len,senha,s, salt, dbPassword))
+				return true;
+			else
+				return false;
 		}
 	}
 }

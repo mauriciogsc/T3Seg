@@ -47,7 +47,7 @@ public class LoginSistema {
 					System.out.println("name = " + resultSet.getString("login"));
 					System.out.println("id = " + resultSet.getInt("id"));
 
-					VirtualKeyboard typingTutor = new VirtualKeyboard(resultSet);    // creates TypingTutor
+					VirtualKeyboard typingTutor = new VirtualKeyboard(resultSet.getString("login"));    // creates TypingTutor
 
 					typingTutor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					typingTutor.setLocation(300, 300);

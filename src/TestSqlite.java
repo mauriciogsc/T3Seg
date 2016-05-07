@@ -103,7 +103,8 @@ public class TestSqlite
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			
 			String salt = getSalt();	
-			String password = setPsw("adminpsw" + salt);		
+			String password = setPsw("adminpsw" + salt);
+			
 			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas) values('admin', '"+password+"', '"+salt+"', 0, 0)");
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
@@ -137,16 +138,16 @@ public class TestSqlite
 	public String setPsw(String psw) throws NoSuchAlgorithmException
 	{		
 		String hex = "";
-		byte[] texto = new byte[psw.length()];
+		byte[] texto = new byte[(int)psw.getBytes().length];
 
 		//transformando o conteudo do arquivo em digest do tipo informado
 		MessageDigest mDigest = MessageDigest.getInstance("MD5");
 
 		//criando o digest e salvando
+		texto = psw.getBytes();
 		mDigest.update(texto);
 		StringBuffer buf_digest = new StringBuffer();
 		byte[] digest = mDigest.digest();
-
 		//transformando o digest em uma string Hexa
 		for(int j = 0; j < digest.length; j++) {
 			hex = Integer.toHexString(0x0100 + (digest[j] & 0x00FF)).substring(1);
