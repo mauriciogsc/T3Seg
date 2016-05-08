@@ -27,7 +27,7 @@ public class TestSqlite
 			statement.executeUpdate("DROP TABLE IF EXISTS usuario");
 			statement.executeUpdate("DROP TABLE IF EXISTS MensagensDeRegistro");
 			statement.executeUpdate("DROP TABLE IF EXISTS Mensagens");
-			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER)");
+			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING)");
 			statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER PRIMARY KEY, descricao STRING)");
 			statement.executeUpdate("CREATE TABLE Mensagens (data TEXT, MRId INTEGER, UsuarioId INTEGER"+
 					", FOREIGN KEY(UsuarioId) REFERENCES usuario(id), FOREIGN KEY(MRId) REFERENCES MensagensDeRegistro(id))");
@@ -78,7 +78,7 @@ public class TestSqlite
 			String salt = getSalt();	
 			String password = setPsw(pswd + salt);
 
-			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas) values('"+login+"', '"+password+"', '"+salt+"', 0, 0)");
+			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado) values('"+login+"', '"+password+"', '"+salt+"', 0, 0,0)");
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
@@ -105,7 +105,7 @@ public class TestSqlite
 			String salt = getSalt();	
 			String password = setPsw("03592419" + salt);
 			
-			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas) values('admin', '"+password+"', '"+salt+"', 0, 0)");
+			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado) values('admin', '"+password+"', '"+salt+"', 0, 0,0)");
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
@@ -116,8 +116,7 @@ public class TestSqlite
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
 			}
-		}
-		
+		}		
 	}
 
 	public String getSalt()

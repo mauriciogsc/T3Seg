@@ -11,7 +11,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -116,6 +120,8 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 				fullPassword = (String) fullPassword.substring(0, (fullPassword.length()-6));
 				isFreeToType = true;
+				
+				if (password.length()<8) go.setEnabled(false);
 			}
 		}
 		else if (button.equals("Entrar"))
@@ -134,6 +140,33 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				if(currentUser.next())
 				{
 
+					SimpleDateFormat dtFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+					
+					int ac = Integer.parseInt(currentUser.getString("totalDeAcessos"));
+					if(currentUser.getString("bloqueado").compareTo("1") == 0) // bloqueado
+					{
+						Date lastDate = dtFormat.parse(currentUser.getString("dataBloqueio"));
+						Date currentDate = new Date();
+						
+						long diff = currentDate.getTime() - lastDate.getTime();
+						
+						if ((diff/(1000*60) ) > 2)
+						{
+							statement.executeUpdate("UPDATE usuario SET bloqueado= 0 where login='"+user+"'");
+						}
+						else
+							return;
+					}
+					if(ac >= 3) // rever 
+					{
+						// bloquear				
+						Date dt = new Date();						
+						System.out.println(dtFormat.format(dt));
+						statement.executeUpdate("UPDATE usuario SET bloqueado= 1, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+user+"'");
+						
+						return;
+						
+					}
 					// pegar salt do usuário corrente
 					String salt = currentUser.getString("salt");
 					String currentPsw = currentUser.getString("senha");
@@ -158,7 +191,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					System.out.println("ERROR");
 				}
 			}
-			catch(SQLException | NoSuchAlgorithmException ex){  System.err.println(ex.getMessage()); }       
+			catch(SQLException | NoSuchAlgorithmException | ParseException ex){  System.err.println(ex.getMessage()); }       
 			finally {         
 				try {
 					if(connection != null)
@@ -238,26 +271,14 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				buf_digest.append((hex_senha.length() < 2 ? "0" : "") + hex_senha);
 			}
 
-			System.out.println("senha combinação: " + senha);
-			if (dbPassword.compareTo(buf_digest.toString()) == 0)
-			{
-				System.out.println("achou sim");
-				return true;
-			}
-			else
-			{
-				System.out.println("achou mermo nao");
-				return false;
-			}
+			if (dbPassword.compareTo(buf_digest.toString()) == 0) return true;
+			else return false;
 		} 
 		else
 		{
-			if(generateCombinations(i+1,0,len,senha,s, salt, dbPassword))
-				return true;
-			if(generateCombinations(i+1,1,len,senha,s, salt, dbPassword))
-				return true;
-			else
-				return false;
+			if(generateCombinations(i+1,0,len,senha,s, salt, dbPassword)) return true;
+			if(generateCombinations(i+1,1,len,senha,s, salt, dbPassword)) return true;
+			else return false;
 		}
 	}
 }
