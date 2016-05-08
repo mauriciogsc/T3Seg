@@ -35,7 +35,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	private String password = new String();
 	private String fullPassword = new String();
 	private boolean isFreeToType = true;
-	private JLabel warning;
 
 	private ResultSet currentUser;
 	private String user;
@@ -67,10 +66,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 		go = new JButton("Entrar"); add(go); go.addActionListener(this);
 		go.setEnabled(false); // nao entra sem senha
-
-		warning = new JLabel("Sua senha possui uma sequência ou uma repetição. Favor entrar com uma nova senha");
-		warning.setForeground(Color.red);
-		add(warning); warning.setVisible(false);
 
 		// pegando o usuario
 		this.user = user;
@@ -109,8 +104,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 		// TODO Auto-generated method stub
 
 		String button = e.getActionCommand();	
-		boolean isFreeToAdd = true;
-
 		if(button.equals("Backspace"))
 		{
 			if (!( password.equals("") || password == null))   
@@ -120,7 +113,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 				fullPassword = (String) fullPassword.substring(0, (fullPassword.length()-6));
 				isFreeToType = true;
-				
+
 				if (password.length()<8) go.setEnabled(false);
 			}
 		}
@@ -141,15 +134,15 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				{
 
 					SimpleDateFormat dtFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
-					
+
 					int ac = Integer.parseInt(currentUser.getString("totalDeAcessos"));
 					if(currentUser.getString("bloqueado").compareTo("1") == 0) // bloqueado
 					{
 						Date lastDate = dtFormat.parse(currentUser.getString("dataBloqueio"));
 						Date currentDate = new Date();
-						
+
 						long diff = currentDate.getTime() - lastDate.getTime();
-						
+
 						if ((diff/(1000*60) ) > 2)
 						{
 							statement.executeUpdate("UPDATE usuario SET bloqueado= 0 where login='"+user+"'");
@@ -163,9 +156,9 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 						Date dt = new Date();						
 						System.out.println(dtFormat.format(dt));
 						statement.executeUpdate("UPDATE usuario SET bloqueado= 1, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+user+"'");
-						
+
 						return;
-						
+
 					}
 					// pegar salt do usu�rio corrente
 					String salt = currentUser.getString("salt");
@@ -184,6 +177,13 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					else
 					{
 						System.out.println("HABEMUS ACESSO");
+						TelaDeCadastro cadastro = new TelaDeCadastro();
+						
+						cadastro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+						cadastro.setLocation(300, 300);
+						cadastro.setSize(500, 150);      // set dimensions of window
+						cadastro.setVisible(true);
+						JFrame frame = new JFrame();
 					}
 				}
 				else
@@ -204,36 +204,14 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 		}
 		else if (isFreeToType) // senha menor que 10, eh possivle add mais digitos
-		{/*
-			// pegar ultimo e novo digito
-			int temp, newDigit;
+		{
+			password+=button.substring(5);
+			fullPassword+=button; // pegar o texto todo
 
-			// realizo a checagem se nao for o primeiro digito
-			if(!password.equals(""))
-			{
-				temp = Integer.parseInt(password.substring(password.length()-1));
-				newDigit = Integer.parseInt(button.substring(5));
+			if (password.length() == 8) go.setEnabled(true);
 
-				// verificar novo digito - eh diferente do anterior e nao eh sequecia 
-				if(newDigit != temp	&& newDigit != (temp - 1) && newDigit != (temp + 1)) isFreeToAdd = true;
-				else
-				{
-					isFreeToAdd = false;
-					password = "";
-					warning.setVisible(true);
-				}
-			}*/
-			if (isFreeToAdd == true)
-			{
-				warning.setVisible(false);
+			if (password.length() == 10) isFreeToType = false;
 
-				password+=button.substring(5);
-				fullPassword+=button; // pegar o texto todo
-
-				if (password.length() == 8) go.setEnabled(true);
-
-				if (password.length() == 10) isFreeToType = false;
-			}
 			passwordField.setText(password);
 		}
 	}
