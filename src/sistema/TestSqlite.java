@@ -76,6 +76,31 @@ public class TestSqlite
 		createAdmin();
 	}
 
+	public byte[] getCertificado(String login)
+	{
+		Connection connection = null;
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			 ResultSet resultSet = statement.executeQuery("SELECT certificado from usuario where login='"+login+"'");
+			 
+			  if(resultSet.next())
+			  {
+				  byte[] ret = resultSet.getBytes(1);
+				  connection.close();
+			     return ret;
+			  }
+			  else
+			  {
+				  connection.close();
+				  return null;
+			  }
+		}
+		catch(SQLException e){  System.err.println(e.getMessage()); return null; } 
+	}
+	
 	public void createUser(String login, String pswd) throws SQLException, NoSuchAlgorithmException
 	{
 		// create a database connection
