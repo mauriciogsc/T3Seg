@@ -8,18 +8,8 @@ import java.sql.SQLException;
 
 public class Sistema {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, SQLException {
+	public static void main(String[] args) throws Exception {
 		
-		//MenuSistema menu = new MenuSistema();
-		//menu.start();
-		
-		//TelaDeCadastro cd = new TelaDeCadastro();
-		//cd.start();
-		
-		TelaDeArquivo arq = new TelaDeArquivo();
-		arq.start();
-		
-		/*
 		TestSqlite test = new TestSqlite();		
 		
 		try {
@@ -31,6 +21,5 @@ public class Sistema {
 		
 		LoginSistema system = new LoginSistema();
 		system.systemInit();
-		*/
 	}
 }

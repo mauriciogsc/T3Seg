@@ -146,7 +146,7 @@ public class TestSqlite
             File fil = new File("Keys/usercert-x509.crt");
             FileInputStream fin = new FileInputStream(fil);
 			prepStat.setBlob(3,fin);
-			prepStat.executeQuery();
+			prepStat.executeUpdate();
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         

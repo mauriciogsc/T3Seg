@@ -1,27 +1,28 @@
 package sistema;
 
 	import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-	import java.io.IOException;
-	import java.io.UnsupportedEncodingException;
-	import java.security.GeneralSecurityException;
-	import java.security.InvalidKeyException;
-	import java.security.KeyFactory;
-	import java.security.NoSuchAlgorithmException;
-	import java.security.PrivateKey;
-	import java.security.PublicKey;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
-	import java.security.SignatureException;
+import java.security.SignatureException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
-	import java.security.interfaces.RSAPublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
-	import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -30,7 +31,7 @@ import javax.crypto.SecretKey;
 
 	public class VerificaChavePrivada {
 
-	public static boolean VerificaChave(File chave,String frase) {
+	public static boolean VerificaChave(File chave,String frase, String login) {
 		  try 
 	        {
 
@@ -55,8 +56,8 @@ import javax.crypto.SecretKey;
 	            KeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(privKey.getBytes()));
 	            PrivateKey privateKey = keyFact.generatePrivate(keySpec);
 	            
-	            File fil = new File("Keys/usercert-x509.crt");
-	            FileInputStream fin = new FileInputStream(fil);
+	            TestSqlite bd = new TestSqlite();
+	            ByteArrayInputStream fin = new ByteArrayInputStream(bd.getCertificado(login));
 	            CertificateFactory f = CertificateFactory.getInstance("X.509");
 	            X509Certificate certificate = (X509Certificate)f.generateCertificate(fin);
 	            fin.close();

@@ -40,6 +40,8 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 	private ResultSet currentUser;
 	private String user;
+	
+	private Date dt;
 
 	public VirtualKeyboard(String user)
 	{
@@ -137,7 +139,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 					SimpleDateFormat dtFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
 
-					int ac = Integer.parseInt(currentUser.getString("totalDeAcessos"));
+					int ac = Integer.parseInt(currentUser.getString("tentativas"));
 					if(currentUser.getString("bloqueado").compareTo("1") == 0) // bloqueado
 					{
 						Date lastDate = dtFormat.parse(currentUser.getString("dataBloqueio"));
@@ -147,19 +149,23 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 						if ((diff/(1000*60) ) > 2)
 						{
-							statement.executeUpdate("UPDATE usuario SET bloqueado= 0 where login='"+user+"'");
+							statement.executeUpdate("UPDATE usuario SET bloqueado= 0,tentativas=0 where login='"+user+"'");
 						}
 						else
 							return;
 					}
-					if(ac >= 3) // rever 
+					if(ac >= 3) 
 					{
 						// bloquear				
-						Date dt = new Date();						
+						dt = new Date();						
 						System.out.println(dtFormat.format(dt));
 						statement.executeUpdate("UPDATE usuario SET bloqueado= 1, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+user+"'");
 
-						return;
+						this.setVisible(false);
+					    dispose();
+					    
+					    LoginSistema ls = new LoginSistema();
+					    ls.systemInit();
 
 					}
 					// pegar salt do usuário corrente
@@ -173,14 +179,28 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					if (!status)
 					{
 						System.out.println("NÃO HABEMUS ACESSO");
-						String acessos = Integer.toString(currentUser.getInt("totalDeAcessos")+1);
-						statement.executeUpdate("UPDATE usuario SET totalDeAcessos= '"+acessos+"' where login='"+currentUser.getString("login")+"'");
+						String tentativas = Integer.toString(currentUser.getInt("tentativas")+1);
+						if (tentativas.equals("3"))
+						{
+							statement.executeUpdate("UPDATE usuario SET bloqueado= 1, tentativas= 0, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+user+"'");
+							
+							this.setVisible(false);
+						    dispose();
+							
+							LoginSistema ls = new LoginSistema();
+							ls.systemInit();
+
+						}
+						statement.executeUpdate("UPDATE usuario SET tentativas= '"+tentativas+"' where login='"+currentUser.getString("login")+"'");
 					}
 					else
 					{
 						System.out.println("HABEMUS ACESSO");
-						TelaDeCadastro cadastro = new TelaDeCadastro(currentUser);
-						cadastro.start();
+						this.setVisible(false);
+					    dispose();
+						
+						TelaDeArquivo arq = new TelaDeArquivo(currentUser);
+						arq.start();
 					}
 				}
 				else
