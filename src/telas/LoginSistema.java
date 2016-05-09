@@ -56,8 +56,6 @@ public class LoginSistema {
 					else
 					{
 						// iterate & read the result set
-						System.out.println("name = " + user_login);
-						System.out.println("id = " + user_id);
 	
 						VirtualKeyboard typingTutor = new VirtualKeyboard(user_login);   
 	

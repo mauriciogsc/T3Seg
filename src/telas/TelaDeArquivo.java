@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.*;
 
@@ -25,9 +27,10 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 	private JFileChooser fc;
 	JTextArea filePath;
 	private JButton fc_button;
-
+	private JButton entrar_button;
 	private String currentUser;
 	private ResultSet user_bd;
+	private File sel_file;
 
 	public TelaDeArquivo(String currentUser)
 	{
@@ -44,7 +47,8 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 
 		filePath = new JTextArea();
 		fc_button = new JButton("Pegar Arquivo");
-
+		entrar_button = new JButton("Entrar");
+		entrar_button.addActionListener(this);
 		fc_button.addActionListener(this);
 
 		this.add(secretPhrase);
@@ -53,7 +57,7 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 		this.add(new JLabel(" "));
 		this.add(filePath);
 		this.add(fc_button);
-
+		this.add(entrar_button);
 	}
 
 	public void start()
@@ -76,53 +80,72 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 		{
 
 			int returnVal = fc.showOpenDialog(TelaDeArquivo.this);
-			String login_user;
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				File file = fc.getSelectedFile();
-
-				// entrar no sistema
-				Connection connection = null;
-				try
-				{
-					// create a database connection
-					connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
-
-					Statement statement = connection.createStatement();
-					statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-					user_bd = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
-					if(user_bd.next())
-					{
-						login_user = user_bd.getString("login");
-						if (VerificaChavePrivada.VerificaChave(file, phrase, login_user)){
-							System.out.println("OK VERIFICACAO");
-
-							String acessos = Integer.toString(user_bd.getInt("totalDeAcessos")+1);
-							statement.executeUpdate("UPDATE usuario SET totalDeAcessos= '"+acessos+"',tentativas=0 where login='"+login_user+"'");
-							this.setVisible(false);
-							dispose();
-
-							MenuSistema menu = new MenuSistema(login_user);
-							menu.start();
-							
-							return;
-
-						}
-						else
-						{
-							System.out.println("NOT OK VERIFICACAO");
-						}
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				filePath.append(file.getName() + "." + "\n");
+				sel_file= fc.getSelectedFile();
+				
+				filePath.append(sel_file.getName() + "." + "\n");
 			} else {
 				filePath.append("Open command cancelled by user." + "\n");
 			}
 
+		}
+		if (button.equals("Entrar"))
+		{
+			// entrar no sistema
+			Connection connection = null;
+			String login_user;
+			try
+			{
+				// create a database connection
+				connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+				Statement statement = connection.createStatement();
+				statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+				user_bd = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
+
+				if(user_bd.next())
+				{
+					login_user = user_bd.getString("login");
+					String tentativas = Integer.toString(user_bd.getInt("tentativas")+1);
+					if (VerificaChavePrivada.VerificaChave(sel_file, phrase, login_user)){
+
+						String acessos = Integer.toString(user_bd.getInt("totalDeAcessos")+1);
+						statement.executeUpdate("UPDATE usuario SET totalDeAcessos= '"+acessos+"',tentativas=0 where login='"+login_user+"'");
+						this.setVisible(false);
+						dispose();
+
+						MenuSistema menu = new MenuSistema(login_user);
+						menu.start();
+						
+						return;
+
+					}
+					else
+					{
+						if (tentativas.equals("3"))
+						{
+							SimpleDateFormat dtFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+							Date dt = new Date();
+							statement.executeUpdate("UPDATE usuario SET bloqueado= 1, tentativas= 0, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+login_user+"'");
+							
+							this.setVisible(false);
+						    dispose();
+							
+							LoginSistema ls = new LoginSistema();
+							ls.systemInit();
+							
+							return;
+
+						}
+						statement.executeUpdate("UPDATE usuario SET tentativas= '"+tentativas+"' where login='"+login_user+"'");
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
