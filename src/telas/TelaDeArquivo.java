@@ -143,9 +143,16 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 						statement.executeUpdate("UPDATE usuario SET tentativas= '"+tentativas+"' where login='"+login_user+"'");
 					}
 				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} 
+			catch(SQLException e){  System.err.println(e.getMessage()); }       
+			finally {  
+				try {
+					if(connection != null)
+						connection.close();
+				}
+				catch(SQLException e) {  // Use SQLException class instead.          
+					System.err.println(e); 
+				}
 			}
 		}
 	}

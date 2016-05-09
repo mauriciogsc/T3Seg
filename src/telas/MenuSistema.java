@@ -32,7 +32,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 	public MenuSistema(String currentuSet) throws SQLException {
 
 		super("Menu Principal");	 
-		
+
 		this.currentUser = currentuSet;
 		createUserPanel();
 
@@ -66,7 +66,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setTopComponent(parte1);
 		splitPane.setBottomComponent(parte2);
-		
+
 		// create a database connection
 		Connection connection = null;
 		try{
@@ -84,7 +84,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 				grupo = new JLabel("grupo");
 				descricao = new JLabel("descricao tabajara");
 				totalAcessos = new JLabel(resultSet.getString("totalDeAcessos"));
-				
+
 				parte1.add(login);
 				parte1.add(grupo);
 				parte1.add(descricao);
@@ -92,14 +92,20 @@ public class MenuSistema extends JFrame implements ActionListener{
 				parte1.add(new JLabel(" "));
 				parte1.add(new JLabel(" "));
 				parte1.add(totalAcessos);
-				
+
 				currentUser = user_login;
-				
+
 			}
 		}
-		catch(Exception e)
-		{
-			
+		catch(SQLException e){  System.err.println(e.getMessage()); }       
+		finally {  
+			try {
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
 		}
 
 		// criando itens do menu 
@@ -196,15 +202,15 @@ public class MenuSistema extends JFrame implements ActionListener{
 		if (menuItem.equals("Cadastrar um novo usuário"))
 		{
 			try {
-				
+
 				this.setVisible(false);
 				dispose();
-				
+
 				TelaDeCadastro tc = new TelaDeCadastro(currentUser);
 				tc.start();
-				
+
 				return;
-				
+
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -213,6 +219,14 @@ public class MenuSistema extends JFrame implements ActionListener{
 		else if (menuItem.equals("Listar chave privada e certificado digital"))
 		{
 			System.out.println("LISTAR");
+
+			this.setVisible(false);
+			dispose();
+
+			TelaDeListagem tl = new TelaDeListagem(currentUser);
+			tl.start();
+
+			return;
 		}
 		else if(menuItem.equals("Consultar pasta de arquivos secretos do usuário"))
 		{
@@ -221,6 +235,22 @@ public class MenuSistema extends JFrame implements ActionListener{
 		else if(menuItem.equals("Sair do Sistema"))
 		{
 			System.out.println("SAIR");
+			
+			try {
+				this.setVisible(false);
+				dispose();
+
+				TelaDeSaida ts;
+				ts = new TelaDeSaida(currentUser);
+				ts.start();				
+
+				return;
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 		}
 	}
 
