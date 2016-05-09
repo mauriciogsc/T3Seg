@@ -2,6 +2,7 @@ package sistema;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -73,7 +74,8 @@ public class TestSqlite
 		}
 
 		// administrador
-		createAdmin();
+		//createAdmin();
+		createUser("admin","03592419",1,"Keys/usercert-x509.crt");
 	}
 
 	public byte[] getCertificado(String login)
@@ -101,20 +103,28 @@ public class TestSqlite
 		catch(SQLException e){  System.err.println(e.getMessage()); return null; } 
 	}
 	
-	public void createUser(String login, String pswd) throws SQLException, NoSuchAlgorithmException
+	public void createUser(String login, String pswd,int grupoId, String pathCert) throws Exception
 	{
 		// create a database connection
 		Connection connection = null;
 		try{
 			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
-
+			PreparedStatement prepStat = connection.prepareStatement("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado,grupoId,certificado) values(?, ? , ? , 0,0,0,?,?)");
+			
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
+			prepStat.setString(1, login);
 			String salt = getSalt();	
 			String password = setPsw(pswd + salt);
-
-			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado) values('"+login+"', '"+password+"', '"+salt+"', 0, 0,0)");
+			prepStat.setString(2, password);
+			prepStat.setString(3, salt);
+			prepStat.setInt(4, grupoId);
+            File fil = new File(pathCert);
+            byte[] cert = new byte[(int)fil.length()];
+            FileInputStream fin = new FileInputStream(fil);
+            fin.read(cert);
+			prepStat.setBytes(5,cert);
+			prepStat.executeUpdate();
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
@@ -125,7 +135,7 @@ public class TestSqlite
 			catch(SQLException e) {  // Use SQLException class instead.          
 				System.err.println(e); 
 			}
-		}
+		}		
 	}
 
 	public void createAdmin() throws Exception

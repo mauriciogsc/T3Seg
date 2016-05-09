@@ -23,7 +23,9 @@ import javax.swing.JTextField;
 public class TelaDeCadastro extends JFrame implements ActionListener{
 
 	private String password;
-	private String login;	
+	private String login;
+	private int grupoId;
+	private String pathCert;
 
 	private JLabel warning;
 
@@ -166,7 +168,13 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 		String button = e.getActionCommand();
 		password = jpf_password.getText();
 		login = jtf_login.getText();
-
+		pathCert = jtf_caminho.getText();
+		if(grupoList.getSelectedItem().toString().compareTo("Administrador")==0)
+		{
+			grupoId = 1;
+		}
+		else
+			grupoId=2;
 		if (button.equals("Cadastrar"))
 		{
 			// verificar repetição/sequencia/senha válida
@@ -214,10 +222,10 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 				TestSqlite teste = new TestSqlite();
 
 				try {
-					teste.createUser(login, password);
-				} catch (NoSuchAlgorithmException | SQLException e1) {
+					teste.createUser(login, password,grupoId,pathCert);
+				} catch (Exception ex) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					ex.printStackTrace();
 				}
 
 				login = "";
