@@ -6,8 +6,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,6 +27,8 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 	private String password;
 	private String login;	
+	
+	private String user_login;// para o recebimento
 
 	private JLabel warning;
 
@@ -33,13 +38,13 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 	private JLabel descricao;
 
 	private JLabel totalUsuarios;
-	
+
 	// parte 2
 	private JLabel cadastro;
 
 	private JLabel name;
 	private JTextField jtf_name;
-	
+
 	private JLabel loginLabel_pt2;
 	private JTextField jtf_login;
 
@@ -48,16 +53,17 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 	private JLabel labelPassword;
 	private JPasswordField jpf_password;
-	
+
 	private JLabel cofirmPassword;
 	private JPasswordField jpf_confirmation;
-		
+
 	private JLabel caminhoArq;
 	private JTextField jtf_caminho;
-	
-	private JButton btn_cadastro;
 
-	public TelaDeCadastro(ResultSet currentUser) throws SQLException
+	private JButton btn_cadastro;
+	private JButton btn_voltar;
+
+	public TelaDeCadastro(String currentUser) throws SQLException
 	{
 		super("Cadastro");
 
@@ -72,22 +78,41 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 		parte2.setVisible(true);    
 
 		parte2.setLayout(new GridLayout(0,2));
-				
-		loginLabel_pt1 = new JLabel(currentUser.getString("login"));
-		grupo_pt1 = new JLabel("pegar o grupo do banco");
-		
-		descricao = new JLabel("descricao q tava no banco");
-		totalUsuarios = new JLabel("Usuarios: ");
 
+		// create a database connection
+		Connection connection = null;
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+			ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
+			if(resultSet.next()) // false se o login n existir na tabela
+			{
+				user_login = resultSet.getString("login");
+
+				loginLabel_pt1 = new JLabel(user_login);
+				grupo_pt1 = new JLabel("grupo");
+				descricao = new JLabel("descricao q tava no banco");
+				totalUsuarios = new JLabel("Usuarios: ");
+
+				parte1.add(loginLabel_pt1);
+				parte1.add(grupo_pt1);
+				parte1.add(descricao);
+
+				parte1.add(new JLabel(" "));
+				parte1.add(new JLabel(" "));
+				parte1.add(totalUsuarios);
+
+			}
+		}
+		catch(Exception e)
+		{
+
+		}
+	
 		cadastro = new JLabel("Formulário de Cadastro");
-
-		parte1.add(loginLabel_pt1);
-		parte1.add(grupo_pt1);
-		parte1.add(descricao);
-
-		parte1.add(new JLabel(" "));
-		parte1.add(new JLabel(" "));
-		parte1.add(totalUsuarios);
 
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setDividerSize(2);
@@ -95,58 +120,61 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setTopComponent(parte1);
 		splitPane.setBottomComponent(parte2);
-		
+
 		name = new JLabel("Nome:");
 		jtf_name = new JTextField(50); jtf_name.setDocument(new JTextFieldLimit(50));
-		
+
 		loginLabel_pt2 = new JLabel("Login:");
 		jtf_login = new JTextField(20); jtf_name.setDocument(new JTextFieldLimit(20));
-		
+
 		grupo_pt2 = new JLabel("Grupo:");		
 		String[] options = {"Administrador","Usuario"};
 		grupoList = new JComboBox<>(options);
-		
+
 		labelPassword = new JLabel("Senha:"); 
 		jpf_password = new JPasswordField(10); jpf_password.setDocument(new JTextFieldLimit(10));
-		
+
 		cofirmPassword = new JLabel("Confirma senha:"); 
 		jpf_confirmation = new JPasswordField(10); jpf_confirmation.setDocument(new JTextFieldLimit(10));
-		
+
 		caminhoArq = new JLabel("Caminho do Arquivo:");
 		jtf_caminho = new JTextField(255); jtf_caminho.setDocument(new JTextFieldLimit(255));
-		
+
 		btn_cadastro = new JButton("Cadastrar");
 		btn_cadastro.addActionListener(this); btn_cadastro.setEnabled(true);
+		
+		btn_voltar = new JButton("Voltar");
+		btn_voltar.addActionListener(this); btn_voltar.setEnabled(true);
 
 		warning = new JLabel();
 		warning.setForeground(Color.red);
 
 		parte2.add(cadastro);
 		parte2.add(new JLabel(" "));
-		
+
 		parte2.add(name);
 		parte2.add(jtf_name);
-		
+
 		parte2.add(loginLabel_pt2);
 		parte2.add(jtf_login);
-		
+
 		parte2.add(grupo_pt2);		
 		parte2.add(grupoList);
-		
+
 		parte2.add(labelPassword);	
 		parte2.add(jpf_password);
-		
+
 		parte2.add(cofirmPassword);
 		parte2.add(jpf_confirmation);
-		
+
 		parte2.add(caminhoArq);
 		parte2.add(jtf_caminho);
-		
+
 		parte2.add(btn_cadastro);
-		parte2.add(new JLabel(" "));
+		parte2.add(btn_voltar);
 		
 		parte2.add(warning); warning.setVisible(false);
-		
+
 		this.add(splitPane);
 	}
 
@@ -173,7 +201,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 			// checagem da senha
 			int current, next;
-			
+
 			if(!password.equals(jpf_confirmation.getText()))
 			{
 				password = "";
@@ -228,6 +256,22 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 				jtf_login.setText(login);
 				jpf_password.setText(password);
 
+			}
+		}
+		else if (button.equals("Voltar"))
+		{
+			MenuSistema ms;
+			try {
+				this.setVisible(false);
+				dispose();
+				
+				ms = new MenuSistema(user_login);
+				ms.start();
+				
+				return;
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		}
 

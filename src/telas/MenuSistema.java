@@ -91,6 +91,8 @@ public class MenuSistema extends JFrame implements ActionListener{
 				parte1.add(new JLabel(" "));
 				parte1.add(totalAcessos);
 				
+				currentUser = user_login;
+				
 			}
 		}
 		catch(Exception e)
@@ -191,7 +193,20 @@ public class MenuSistema extends JFrame implements ActionListener{
 
 		if (menuItem.equals("Cadastrar um novo usuário"))
 		{
-			System.out.println("CADASTRAR");
+			try {
+				
+				this.setVisible(false);
+				dispose();
+				
+				TelaDeCadastro tc = new TelaDeCadastro(currentUser);
+				tc.start();
+				
+				return;
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		else if (menuItem.equals("Listar chave privada e certificado digital"))
 		{
