@@ -107,8 +107,13 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 					grupo_pt1 = new JLabel("Grupo: Usuario");
 					descricao = new JLabel("Descricao: Este eh um usuario do sistema");
 				}
-				totalUsuarios = new JLabel("Usuarios: ");
-
+				ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM usuario");
+				if(rs.next())
+				{
+					totalUsuarios = new JLabel("Usuarios: " + rs.getInt(1));
+				}
+				else
+					totalUsuarios = new JLabel("Usuarios: 0");
 				parte1.add(loginLabel_pt1);
 				parte1.add(grupo_pt1);
 				parte1.add(descricao);
