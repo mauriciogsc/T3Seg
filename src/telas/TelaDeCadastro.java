@@ -1,15 +1,25 @@
+package telas;
+import sistema.TestSqlite;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
+import javafx.scene.control.ComboBox;
+
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 
@@ -28,31 +38,91 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 	private JLabel warning;
 
+	private JLabel name;
+	private JLabel loginLabel;
+	private JLabel grupo;
+	private JComboBox<String> list;
+	private JLabel descricao;
+	private JLabel totalAcessos;
+	private JLabel cadastro;
+
 	public TelaDeCadastro()
 	{
 		super("Cadastro");
-		setLayout( new FlowLayout() );
 
-		labelLogin = new JLabel("Login"); add(labelLogin);
+		JPanel parte1 = new JPanel();
+		parte1.setSize(200, 200);
+		parte1.setVisible(true);
+
+		parte1.setLayout(new BoxLayout(parte1, BoxLayout.PAGE_AXIS));
+
+		JPanel parte2 = new JPanel();
+		parte2.setSize(500, 200);
+		parte2.setVisible(true);    
+
+		parte2.setLayout(new GridLayout(0,2));
+
+		name = new JLabel("Nome:");
+		loginLabel = new JLabel("Login:");
+		
+		grupo = new JLabel("Grupo:");
+		
+		descricao = new JLabel("descricao tabajara");
+		totalAcessos = new JLabel("Acessos: 4");
+
+		cadastro = new JLabel("Formulário de Cadastro:");
+
+		parte1.add(name);
+		parte1.add(loginLabel);
+		parte1.add(grupo);
+		parte1.add(descricao);
+
+		parte1.add(new JLabel(" "));
+		parte1.add(new JLabel(" "));
+		parte1.add(totalAcessos);
+
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setDividerSize(2);
+		splitPane.setDividerLocation(150);
+		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane.setTopComponent(parte1);
+		splitPane.setBottomComponent(parte2);
+
+		parte2.add(cadastro);
+		parte2.add(new JLabel(" "));
+
+		labelLogin = new JLabel("Login"); parte2.add(labelLogin);
 		jtf = new JTextField(10);
 
 		jtf.setEditable(true);
-		add(jtf , BorderLayout.NORTH);
+		parte2.add(jtf , BorderLayout.NORTH);
 
-		labelPassword = new JLabel("Password"); add(labelPassword); 
+		labelPassword = new JLabel("Password"); parte2.add(labelPassword); 
 		jpf = new JPasswordField(10);		
 		jpf.setDocument(new JTextFieldLimit(10));
 
 		jpf.setEditable(true);
-		add(jpf , BorderLayout.NORTH);
+		parte2.add(jpf , BorderLayout.NORTH);
 
 		btn = new JButton("Cadastrar");
 		btn.addActionListener(this); btn.setEnabled(true);
-		add(btn);
+		parte2.add(btn);
 
 		warning = new JLabel();
 		warning.setForeground(Color.red);
-		add(warning); warning.setVisible(false);
+		parte2.add(warning); warning.setVisible(false);
+
+
+		this.add(splitPane);
+	}
+
+	public void start()
+	{
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocation(300, 300);
+		this.setSize(400, 350);      // set dimensions of window
+		this.setVisible(true);
+		JFrame frame = new JFrame();
 	}
 
 	@Override
@@ -78,7 +148,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 				warning.setVisible(true);
 				return;
 			}
-			
+
 			else if(!password.equals(""))
 			{
 				for(int i=0; i<password.length()-1; i++)
@@ -99,7 +169,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 						return;
 					}
 				}
-				
+
 				TestSqlite teste = new TestSqlite();
 
 				try {
@@ -108,7 +178,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				 
+
 				login = "";
 				password = "";
 				warning.setText("Cadastro Concluído");
