@@ -6,8 +6,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MenuSistema extends JFrame implements ActionListener{
 
@@ -23,11 +26,10 @@ public class MenuSistema extends JFrame implements ActionListener{
 	private JLabel menu;
 
 	private String currentUser;
-	private ResultSet user_bd;
 
 	public MenuSistema(String currentuSet) throws SQLException {
 
-		super();	 
+		super("Menu Principal");	 
 		
 		this.currentUser = currentuSet;
 		createUserPanel();
@@ -62,6 +64,39 @@ public class MenuSistema extends JFrame implements ActionListener{
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setTopComponent(parte1);
 		splitPane.setBottomComponent(parte2);
+		
+		// create a database connection
+		Connection connection = null;
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+			ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
+			if(resultSet.next()) // false se o login n existir na tabela
+			{
+				String user_login = resultSet.getString("login");
+
+				login = new JLabel(user_login);
+				grupo = new JLabel("grupo");
+				descricao = new JLabel("descricao tabajara");
+				totalAcessos = new JLabel(resultSet.getString("totalDeAcessos"));
+				
+				parte1.add(login);
+				parte1.add(grupo);
+				parte1.add(descricao);
+
+				parte1.add(new JLabel(" "));
+				parte1.add(new JLabel(" "));
+				parte1.add(totalAcessos);
+				
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
 
 		// criando itens do menu 
 		Cadastrar = new JButton("Cadastrar um novo usuário");
@@ -75,20 +110,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 		Consultar.setMaximumSize(d);
 		Sair.setMaximumSize(d);
 
-		login = new JLabel(user_bd.getString("login"));
-		grupo = new JLabel("grupo");
-		descricao = new JLabel("descricao tabajara");
-		totalAcessos = new JLabel(user_bd.getString("totalDeAcessos"));
-
 		menu = new JLabel("Menu Principal:");
-
-		parte1.add(login);
-		parte1.add(grupo);
-		parte1.add(descricao);
-
-		parte1.add(new JLabel(" "));
-		parte1.add(new JLabel(" "));
-		parte1.add(totalAcessos);
 
 		parte2.add(menu);
 		parte2.add(new JLabel(" "));
