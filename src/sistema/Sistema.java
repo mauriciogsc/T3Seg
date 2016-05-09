@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class Sistema {
 
 	public static void main(String[] args) throws Exception {
-		
+		/*
 		TestSqlite test = new TestSqlite();		
 		
 		try {
@@ -21,6 +21,9 @@ public class Sistema {
 		
 		LoginSistema system = new LoginSistema();
 		system.systemInit();
+		*/
 		
+		TelaDeConsulta tc = new TelaDeConsulta();
+		tc.start();
 	}
 }

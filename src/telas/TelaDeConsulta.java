@@ -12,19 +12,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 
 public class TelaDeConsulta extends JFrame implements ActionListener{
 
-	private JButton Sair;
+	private JButton Voltar;
 
 	private JLabel login;
 	private JLabel grupo;
 	private JLabel descricao;
-	private JLabel totalAcessos;
+	private JLabel totalConsultas;
 	private JLabel menu;
 	
-	private JLabel saida;
-	private JLabel msgSaida;
+	private JLabel certificado;
+	private JTextField info_certificado;
 
 	private ResultSet currentUser;
 
@@ -51,18 +52,18 @@ public class TelaDeConsulta extends JFrame implements ActionListener{
 		splitPane.setBottomComponent(parte2);
 
 		// criando itens do menu 
-		Sair = new JButton("Sair");             
+		Voltar = new JButton("Voltar");             
 
 		Dimension d = new Dimension(80,30);
-		Sair.setMaximumSize(d);
+		Voltar.setMaximumSize(d);
 
 		login = new JLabel("bla");
 		grupo = new JLabel("grupo");
 		descricao = new JLabel("descricao tabajara");
-		totalAcessos = new JLabel("bla");
+		totalConsultas = new JLabel("bla");
 
-		saida = new JLabel("Saida do Sistema:");
-		msgSaida = new JLabel("Pressione o botão Sair para confirmar.");
+		certificado = new JLabel("Certificado:");
+		info_certificado = new JTextField("Pegar info sobre o form no banco");
 		
 		menu = new JLabel("Menu Principal:");
 
@@ -72,14 +73,14 @@ public class TelaDeConsulta extends JFrame implements ActionListener{
 
 		parte1.add(new JLabel(" "));
 		parte1.add(new JLabel(" "));
-		parte1.add(totalAcessos);
+		parte1.add(totalConsultas);
 
-		parte2.add(saida);
+		parte2.add(certificado);
 		parte2.add(new JLabel(" "));
-		parte2.add(msgSaida);
-		parte2.add(Sair);
+		parte2.add(info_certificado);
+		parte2.add(Voltar);
 
-		Sair.addActionListener(this);       
+		Voltar.addActionListener(this);       
 
 		this.add(splitPane);
 
@@ -98,6 +99,11 @@ public class TelaDeConsulta extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		String button = arg0.getActionCommand();
+		
+		if(button.equals("Voltar"))
+		{
+			
+		}
 	}
 
 }
