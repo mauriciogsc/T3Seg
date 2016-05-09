@@ -258,7 +258,6 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 					next = Character.getNumericValue(password.charAt(i+1));
 
 
-					System.out.println(login + " " + current + " + " + next);
 
 					// verificar novo digito - eh diferente do anterior e nao eh sequecia 
 					if(next == current || next == current+1 || next == current-1)

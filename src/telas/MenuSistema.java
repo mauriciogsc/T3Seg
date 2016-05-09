@@ -249,7 +249,6 @@ public class MenuSistema extends JFrame implements ActionListener{
 		}
 		else if (menuItem.equals("Listar chave privada e certificado digital"))
 		{
-			System.out.println("LISTAR");
 
 			this.setVisible(false);
 			dispose();
@@ -261,11 +260,9 @@ public class MenuSistema extends JFrame implements ActionListener{
 		}
 		else if(menuItem.equals("Consultar pasta de arquivos secretos do usuário"))
 		{
-			System.out.println("CONSULTAR");
 		}
 		else if(menuItem.equals("Sair do Sistema"))
 		{
-			System.out.println("SAIR");
 
 			try {
 				this.setVisible(false);
