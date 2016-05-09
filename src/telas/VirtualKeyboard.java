@@ -189,6 +189,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					else
 					{
 						System.out.println("HABEMUS ACESSO");
+						statement.executeUpdate("UPDATE usuario SET tentativas= 0 where login='"+login_user+"'");
 						this.setVisible(false);
 					    dispose();
 						
