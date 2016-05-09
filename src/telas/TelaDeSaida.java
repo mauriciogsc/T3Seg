@@ -73,11 +73,21 @@ public class TelaDeSaida extends JFrame implements ActionListener{
 			ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
 			if(resultSet.next()) // false se o login n existir na tabela
 			{
-				user_login = resultSet.getString("login");
-
-				login = new JLabel(user_login);
-				grupo = new JLabel(resultSet.getString("grupoId"));
-				descricao = new JLabel("descricao");
+				user_login = resultSet.getString("login");				
+				login = new JLabel("Login: "+ user_login);
+				
+				int user_id = resultSet.getInt("grupoId");
+				
+				if (user_id == 1)
+				{
+					grupo = new JLabel("Grupo: Administrador");
+					descricao = new JLabel("Descricao: Este eh o administrador do sistema");
+				}
+				else if (user_id == 2)
+				{
+					grupo = new JLabel("Grupo: Usuario");
+					descricao = new JLabel("Descricao: Este eh um usuario do sistema");
+				}
 				totalAcessos = new JLabel("Acessos: " + resultSet.getString("totalDeAcessos"));
 
 				parte1.add(login);

@@ -93,11 +93,20 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 			ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
 			if(resultSet.next()) // false se o login n existir na tabela
 			{
-				user_login = resultSet.getString("login");
+				user_login = resultSet.getString("login");				
+				loginLabel_pt1 = new JLabel("Login: "+ user_login);
 
-				loginLabel_pt1 = new JLabel(user_login);
-				grupo_pt1 = new JLabel("grupo");
-				descricao = new JLabel("descricao q tava no banco");
+				int user_id = resultSet.getInt("grupoId");
+				if (user_id == 1)
+				{
+					grupo_pt1 = new JLabel("Grupo: Administrador");
+					descricao = new JLabel("Descricao: Este eh o administrador do sistema");
+				}
+				else if (user_id == 2)
+				{
+					grupo_pt1 = new JLabel("Grupo: Usuario");
+					descricao = new JLabel("Descricao: Este eh um usuario do sistema");
+				}
 				totalUsuarios = new JLabel("Usuarios: ");
 
 				parte1.add(loginLabel_pt1);

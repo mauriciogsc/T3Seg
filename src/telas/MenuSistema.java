@@ -82,10 +82,12 @@ public class MenuSistema extends JFrame implements ActionListener{
 			{
 				String user_login = resultSet.getString("login");
 
-				login = new JLabel(user_login);
-				grupo = new JLabel("grupo");
-				descricao = new JLabel("descricao tabajara");
-				totalAcessos = new JLabel(resultSet.getString("totalDeAcessos"));
+				login = new JLabel("Login: "+ user_login);
+
+				grupo = new JLabel("Grupo: Usuario");
+				descricao = new JLabel("Descricao: Este eh um usuario do sistema");
+
+				totalAcessos = new JLabel("Acessos: "+ resultSet.getString("totalDeAcessos"));
 
 				parte1.add(login);
 				parte1.add(grupo);
@@ -168,10 +170,12 @@ public class MenuSistema extends JFrame implements ActionListener{
 			{
 				String user_login = resultSet.getString("login");
 
-				login = new JLabel(user_login);
-				grupo = new JLabel(resultSet.getString("grupoId"));
-				descricao = new JLabel("descricao tabajara");
-				totalAcessos = new JLabel(resultSet.getString("totalDeAcessos"));
+				login = new JLabel("Login: "+ user_login);
+
+				grupo = new JLabel("Grupo: Administrador");
+				descricao = new JLabel("Descricao: Este eh o administrador do sistema");
+
+				totalAcessos = new JLabel("Acessos: "+ resultSet.getString("totalDeAcessos"));
 
 				parte1.add(login);
 				parte1.add(grupo);
