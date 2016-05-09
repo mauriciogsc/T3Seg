@@ -23,6 +23,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 
@@ -169,6 +170,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 					if (!(status || status2))
 					{
+						JOptionPane.showMessageDialog(null, "Senha inválida.");
 						String tentativas = Integer.toString(currentUser.getInt("tentativas")+1);
 						if (tentativas.equals("3"))
 						{
