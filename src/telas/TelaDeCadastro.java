@@ -110,9 +110,15 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 			}
 		}
-		catch(Exception e)
-		{
-
+		catch(SQLException e){  System.err.println(e.getMessage()); }       
+		finally {  
+			try {
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
 		}
 	
 		cadastro = new JLabel("Formulário de Cadastro");
