@@ -37,6 +37,7 @@ public class TestSqlite
 			statement.executeUpdate("CREATE TABLE grupo (id INTEGER PRIMARY KEY,nome STRING)");
 
 			statement.executeUpdate("INSERT INTO grupo(nome) values('Administrador'),('Usuario')");
+			InsertMensagens(statement);
 			//int ids [] = {1,2,3,4,5};
 			//String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
@@ -140,6 +141,62 @@ public class TestSqlite
 		return salt;
 	}
 
+	public void InsertMensagens(Statement statement) throws SQLException
+	{
+		
+		statement.executeUpdate("INSERT INTO Mensagens (id,descricao)"+
+				"values(1001,'Sistema iniciado.'),"+
+				"(1002,'Sistema encerrado.'),"+
+				"(2001,'Autenticação etapa 1 iniciada.'),"+
+				"(2002,'Autenticação etapa 1 encerrada.'),"+
+				"(2003,'Login name <login_name> identificado com acesso liberado.'),"+
+				"(2004,'Login name <login_name> identificado com acesso bloqueado.'),"+
+				"(2005,'Login name <login_name> não identificado.'),"+
+				"(3001,'Autenticação etapa 2 iniciada para <login_name>.'),"+
+				"(3002,'Autenticação etapa 2 encerrada para <login_name>.'),"+
+				"(3003,'Senha pessoal verificada positivamente para <login_name>.'),"+
+				"(3004,'Senha pessoal verificada negativamente para <login_name>.'),"+
+				"(3005,'Primeiro erro da senha pessoal contabilizado para <login_name>.'),"+
+				"(3006,'Segundo erro da senha pessoal contabilizado para <login_name>.'),"+
+				"(3007,'Terceiro erro da senha pessoal contabilizado para <login_name>.'),"+
+				"(3008,'Acesso do usuario <login_name> bloqueado pela autenticação etapa 2.'),"+
+				"(4001,'Autenticação etapa 3 iniciada para <login_name>.'),"+
+				"(4002,'Autenticação etapa 3 encerrada para <login_name>.'),"+
+				"(4003,'Chave privada verificada positivamente para <login_name>.'),"+
+				"(4004,'Primeiro erro da chave privada contabilizado para <login_name>.'),"+
+				"(4005,'Segundo erro da chave privada contabilizado para <login_name>.'),"+
+				"(4006,'Terceiro erro da chave privada contabilizado para <login_name>.'),"+
+				"(4007,'Caminho da chave privada inválido fornecido por <login_name>.'),"+
+				"(4008,'Frase secreta inválida fornecida por <login_name>.'),"+
+				"(4009,'Acesso do usuario <login_name> bloqueado pela autenticação etapa 3.'),"+
+				"(5001,'Tela principal apresentada para <login_name>.'),"+
+				"(5002,'Opção 1 do menu principal selecionada por <login_name>.'),"+
+				"(5003,'Opção 2 do menu principal selecionada por <login_name>.'),"+
+				"(5004,'Opção 3 do menu principal selecionada por <login_name>.'),"+
+				"(5005,'Opção 4 do menu principal selecionada por <login_name>.'),"+
+				"(6001,'Tela de cadastro apresentada para <login_name>.'),"+
+				"(6002,'Botão cadastrar pressionado por <login_name>.'),"+
+				"(6003,'Caminho do certificado digital inválido fornecido por <login_name>.'),"+
+				"(6004,'Confirmação de dados aceita por <login_name>.'),"+
+				"(6005,'Confirmação de dados rejeitada por <login_name>.'),"+
+				"(6006,'Botão voltar de cadastro para o menu principal pressionado por <login_name>.'),"+
+				"(7001,'Tela de listagem de chave privada e certificado apresentada para <login_name>.'),"+
+				"(7002,'Botão voltar de listagem para o menu principal pressionado por <login_name>.'),"+
+				"(8001,'Tela de consulta de arquivos secretos apresentada para <login_name>.'),"+
+				"(8002,'Botão voltar de consulta para o menu principal pressionado por <login_name>.'),"+
+				"(8003,'Botão Listar de consulta pressionado por <login_name>.'),"+
+				"(8006,'Caminho de pasta inválido fornecido por <login_name>.'),"+
+				"(8007,'Lista de arquivos apresentada para <login_name>.'),"+
+				"(8008,'Arquivo <arq_name> selecionado por <login_name> para decriptação.'),"+
+				"(8009,'Arquivo <arq_name> decriptado com sucesso para <login_name>.'),"+
+				"(8010,'Arquivo <arq_name> verificado (integridade e autenticidade) com sucesso para <login_name>.'),"+
+				"(8011,'Falha na decriptação do arquivo <arq_name> para <login_name>.'),"+
+				"(8012,'Falha na verificação do arquivo <arq_name> para <login_name>.'),"+
+				"(9001,'Tela de saída apresentada para <login_name>.'),"+
+				"(9002,'Botão sair pressionado por <login_name>.'),"+
+				"(9003,'Botão voltar de sair para o menu principal pressionado por <login_name>.')");
+	}
+	
 	public String setPsw(String psw) throws NoSuchAlgorithmException
 	{		
 		String hex = "";
