@@ -10,8 +10,14 @@ public class Sistema {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, SQLException {
 		
-		MenuSistema menu = new MenuSistema();
-		menu.start();
+		//MenuSistema menu = new MenuSistema();
+		//menu.start();
+		
+		//TelaDeCadastro cd = new TelaDeCadastro();
+		//cd.start();
+		
+		TelaDeArquivo arq = new TelaDeArquivo();
+		arq.start();
 		
 		/*
 		TestSqlite test = new TestSqlite();		
