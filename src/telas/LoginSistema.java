@@ -44,15 +44,17 @@ public class LoginSistema {
 				ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+login+"'");
 				if(resultSet.next()) // false se o login n existir na tabela
 				{
+					String user_login = resultSet.getString("login");
+					int user_id = resultSet.getInt("id");
 					// iterate & read the result set
-					System.out.println("name = " + resultSet.getString("login"));
-					System.out.println("id = " + resultSet.getInt("id"));
+					System.out.println("name = " + user_login);
+					System.out.println("id = " + user_id);
 
-					VirtualKeyboard typingTutor = new VirtualKeyboard(resultSet.getString("login"));    // creates TypingTutor
+					VirtualKeyboard typingTutor = new VirtualKeyboard(user_login);   
 
 					typingTutor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					typingTutor.setLocation(300, 300);
-					typingTutor.setSize(400, 200);      // set dimensions of window
+					typingTutor.setSize(400, 200);    
 					typingTutor.setVisible(true);
 					JFrame frame = new JFrame();
 					

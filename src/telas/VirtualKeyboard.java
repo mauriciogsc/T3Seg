@@ -41,7 +41,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	private ResultSet currentUser;
 	private String user;
 	
-	private Date dt;
+	private Date dt = new Date();
 
 	public VirtualKeyboard(String user)
 	{

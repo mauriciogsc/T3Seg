@@ -102,7 +102,7 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 							this.setVisible(false);
 							dispose();
 
-							MenuSistema menu = new MenuSistema(user_bd);
+							MenuSistema menu = new MenuSistema(login_user);
 							menu.start();
 							
 							return;

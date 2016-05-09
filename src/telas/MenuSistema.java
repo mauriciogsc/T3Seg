@@ -25,10 +25,11 @@ public class MenuSistema extends JFrame implements ActionListener{
 	private String currentUser;
 	private ResultSet user_bd;
 
-	public MenuSistema(ResultSet currentuSet) throws SQLException {
+	public MenuSistema(String currentuSet) throws SQLException {
 
-		super();	   
-
+		super();	 
+		
+		this.currentUser = currentuSet;
 		createUserPanel();
 
 	}
