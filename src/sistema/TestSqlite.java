@@ -1,8 +1,12 @@
 package sistema;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,7 +14,7 @@ import java.util.Random;
 
 public class TestSqlite
 {	
-	public void createDatabase() throws ClassNotFoundException, NoSuchAlgorithmException, SQLException
+	public void createDatabase() throws Exception
 	{
 		// load the sqlite-JDBC driver using the current class loader
 		Class.forName("org.sqlite.JDBC");
@@ -23,8 +27,7 @@ public class TestSqlite
 
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-
+		
 			statement.executeUpdate("DROP TABLE IF EXISTS usuario");
 			statement.executeUpdate("DROP TABLE IF EXISTS MensagensDeRegistro");
 			statement.executeUpdate("DROP TABLE IF EXISTS Mensagens");
@@ -38,6 +41,7 @@ public class TestSqlite
 
 			statement.executeUpdate("INSERT INTO grupo(nome) values('Administrador'),('Usuario')");
 			InsertMensagens(statement);
+			
 			//int ids [] = {1,2,3,4,5};
 			//String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
@@ -99,20 +103,25 @@ public class TestSqlite
 		}
 	}
 
-	public void createAdmin() throws SQLException, NoSuchAlgorithmException
+	public void createAdmin() throws Exception
 	{
 		// create a database connection
 		Connection connection = null;
 		try{
 			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
-
+			PreparedStatement prepStat = connection.prepareStatement("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado,grupoId,certificado) values('admin', ? , ? , 0,0,0,1,?)");
+			
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			
 			String salt = getSalt();	
 			String password = setPsw("03592419" + salt);
-			
-			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado,grupoId) values('admin', '"+password+"', '"+salt+"', 0, 0,0,1)");
+			prepStat.setString(1, password);
+			prepStat.setString(2, salt);
+            File fil = new File("Keys/usercert-x509.crt");
+            FileInputStream fin = new FileInputStream(fil);
+			prepStat.setBlob(3,fin);
+			prepStat.executeQuery();
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
