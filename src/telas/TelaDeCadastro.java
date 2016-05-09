@@ -26,6 +26,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 	private String login;
 	private int grupoId;
 	private String pathCert;
+	private String nome;
 
 	private JLabel warning;
 
@@ -169,6 +170,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 		password = jpf_password.getText();
 		login = jtf_login.getText();
 		pathCert = jtf_caminho.getText();
+		nome = jtf_name.getText();
 		if(grupoList.getSelectedItem().toString().compareTo("Administrador")==0)
 		{
 			grupoId = 1;
@@ -222,7 +224,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 				TestSqlite teste = new TestSqlite();
 
 				try {
-					teste.createUser(login, password,grupoId,pathCert);
+					teste.createUser(login, password,grupoId,pathCert,nome);
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
 					ex.printStackTrace();

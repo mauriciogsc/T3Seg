@@ -33,7 +33,7 @@ public class TestSqlite
 			statement.executeUpdate("DROP TABLE IF EXISTS MensagensDeRegistro");
 			statement.executeUpdate("DROP TABLE IF EXISTS Mensagens");
 			statement.executeUpdate("DROP TABLE IF EXISTS grupo");
-			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING,grupoId INTEGER,certificado BLOB"+
+			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING,grupoId INTEGER,certificado BLOB,nome STRING"+
 					", FOREIGN KEY(grupoId) REFERENCES grupo(id))");
 			statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER PRIMARY KEY, descricao STRING)");
 			statement.executeUpdate("CREATE TABLE Mensagens (data TEXT, MRId INTEGER, UsuarioId INTEGER"+
@@ -75,7 +75,7 @@ public class TestSqlite
 
 		// administrador
 		//createAdmin();
-		createUser("admin","03592419",1,"Keys/usercert-x509.crt");
+		createUser("admin","03592419",1,"Keys/usercert-x509.crt","Administrador");
 	}
 
 	public byte[] getCertificado(String login)
@@ -103,13 +103,13 @@ public class TestSqlite
 		catch(SQLException e){  System.err.println(e.getMessage()); return null; } 
 	}
 	
-	public void createUser(String login, String pswd,int grupoId, String pathCert) throws Exception
+	public void createUser(String login, String pswd,int grupoId, String pathCert,String nome) throws Exception
 	{
 		// create a database connection
 		Connection connection = null;
 		try{
 			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
-			PreparedStatement prepStat = connection.prepareStatement("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado,grupoId,certificado) values(?, ? , ? , 0,0,0,?,?)");
+			PreparedStatement prepStat = connection.prepareStatement("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado,grupoId,certificado,nome) values(?, ? , ? , 0,0,0,?,?,?)");
 			
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
@@ -124,6 +124,7 @@ public class TestSqlite
             FileInputStream fin = new FileInputStream(fil);
             fin.read(cert);
 			prepStat.setBytes(5,cert);
+			prepStat.setString(6, nome);
 			prepStat.executeUpdate();
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
