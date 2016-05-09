@@ -107,7 +107,8 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 
-		String button = e.getActionCommand();	
+		String button = e.getActionCommand();
+		String login_user;
 		if(button.equals("Backspace"))
 		{
 			if (!( password.equals("") || password == null))   
@@ -136,7 +137,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 				currentUser = statement.executeQuery("SELECT * from usuario where login = '"+user+"'");
 				if(currentUser.next())
 				{
-
+					login_user = currentUser.getString("login");
 					SimpleDateFormat dtFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
 
 					int ac = Integer.parseInt(currentUser.getString("tentativas"));
@@ -153,20 +154,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 						}
 						else
 							return;
-					}
-					if(ac >= 3) 
-					{
-						// bloquear				
-						dt = new Date();						
-						System.out.println(dtFormat.format(dt));
-						statement.executeUpdate("UPDATE usuario SET bloqueado= 1, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+user+"'");
-
-						this.setVisible(false);
-					    dispose();
-					    
-					    LoginSistema ls = new LoginSistema();
-					    ls.systemInit();
-
 					}
 					// pegar salt do usuário corrente
 					String salt = currentUser.getString("salt");
@@ -189,9 +176,11 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 							
 							LoginSistema ls = new LoginSistema();
 							ls.systemInit();
+							
+							return;
 
 						}
-						statement.executeUpdate("UPDATE usuario SET tentativas= '"+tentativas+"' where login='"+currentUser.getString("login")+"'");
+						statement.executeUpdate("UPDATE usuario SET tentativas= '"+tentativas+"' where login='"+login_user+"'");
 					}
 					else
 					{
@@ -199,8 +188,10 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 						this.setVisible(false);
 					    dispose();
 						
-						TelaDeArquivo arq = new TelaDeArquivo(currentUser);
+						TelaDeArquivo arq = new TelaDeArquivo(login_user);
 						arq.start();
+						
+						return;
 					}
 				}
 				else

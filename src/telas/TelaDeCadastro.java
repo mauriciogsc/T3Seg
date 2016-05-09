@@ -109,7 +109,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 		labelPassword = new JLabel("Senha:"); 
 		jpf_password = new JPasswordField(10); jpf_password.setDocument(new JTextFieldLimit(10));
 		
-		cofirmPassword = new JLabel("Comfirma:"); 
+		cofirmPassword = new JLabel("Confirma senha:"); 
 		jpf_confirmation = new JPasswordField(10); jpf_confirmation.setDocument(new JTextFieldLimit(10));
 		
 		caminhoArq = new JLabel("Caminho do Arquivo:");

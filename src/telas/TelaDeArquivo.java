@@ -25,9 +25,10 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 	JTextArea filePath;
 	private JButton fc_button;
 
-	private ResultSet currentUser;
+	private String currentUser;
+	private ResultSet user_bd;
 
-	public TelaDeArquivo(ResultSet currentUser)
+	public TelaDeArquivo(String currentUString)
 	{
 		super("Pegar Arquivo");
 
@@ -75,41 +76,44 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 
 			System.out.println("aqr");
 			int returnVal = fc.showOpenDialog(TelaDeArquivo.this);
+			String login_user;
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
-				try {
-					if (VerificaChavePrivada.VerificaChave(file, phrase, currentUser.getString("login"))){
 
-						// entrar no sistema
-						Connection connection = null;
-						try
-						{
-							// create a database connection
-							connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+				// entrar no sistema
+				Connection connection = null;
+				try
+				{
+					// create a database connection
+					connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
 
-							Statement statement = connection.createStatement();
-							statement.setQueryTimeout(30);  // set timeout to 30 sec.
+					Statement statement = connection.createStatement();
+					statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-							if(currentUser.next())
-							{
-								String acessos = Integer.toString(currentUser.getInt("totalDeAcessos")+1);
-								statement.executeUpdate("UPDATE usuario SET tentativas= '"+acessos+"' where login='"+currentUser.getString("login")+"'");
-								this.setVisible(false);
-								dispose();
-
-								MenuSistema menu = new MenuSistema(currentUser);
-								menu.start();
-							}
-						}
-						catch(Exception ex)
-						{
-
-						}
-					}
-					else
+					user_bd = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
+					if(user_bd.next())
 					{
-						System.out.println("NOT OK VERIFICACAO");
+						login_user = user_bd.getString("login");
+
+
+						if (VerificaChavePrivada.VerificaChave(file, phrase, login_user)){
+
+
+							String acessos = Integer.toString(user_bd.getInt("totalDeAcessos")+1);
+							statement.executeUpdate("UPDATE usuario SET tentativas= '"+acessos+"' where login='"+login_user+"'");
+							this.setVisible(false);
+							dispose();
+
+							MenuSistema menu = new MenuSistema(user_bd);
+							menu.start();
+
+
+						}
+						else
+						{
+							System.out.println("NOT OK VERIFICACAO");
+						}
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block

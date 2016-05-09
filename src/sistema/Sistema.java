@@ -21,5 +21,6 @@ public class Sistema {
 		
 		LoginSistema system = new LoginSistema();
 		system.systemInit();
+		
 	}
 }

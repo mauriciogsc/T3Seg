@@ -22,7 +22,8 @@ public class MenuSistema extends JFrame implements ActionListener{
 	private JLabel totalAcessos;
 	private JLabel menu;
 
-	private ResultSet currentUser;
+	private String currentUser;
+	private ResultSet user_bd;
 
 	public MenuSistema(ResultSet currentuSet) throws SQLException {
 
@@ -73,10 +74,10 @@ public class MenuSistema extends JFrame implements ActionListener{
 		Consultar.setMaximumSize(d);
 		Sair.setMaximumSize(d);
 
-		login = new JLabel(currentUser.getString("login"));
+		login = new JLabel(user_bd.getString("login"));
 		grupo = new JLabel("grupo");
 		descricao = new JLabel("descricao tabajara");
-		totalAcessos = new JLabel(currentUser.getString("totalDeAcessos"));
+		totalAcessos = new JLabel(user_bd.getString("totalDeAcessos"));
 
 		menu = new JLabel("Menu Principal:");
 
