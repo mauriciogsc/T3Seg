@@ -98,7 +98,7 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 							System.out.println("OK VERIFICACAO");
 
 							String acessos = Integer.toString(user_bd.getInt("totalDeAcessos")+1);
-							statement.executeUpdate("UPDATE usuario SET tentativas= '"+acessos+"' where login='"+login_user+"'");
+							statement.executeUpdate("UPDATE usuario SET totalDeAcessos= '"+acessos+"',tentativas=0 where login='"+login_user+"'");
 							this.setVisible(false);
 							dispose();
 
