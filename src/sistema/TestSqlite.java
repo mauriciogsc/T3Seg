@@ -32,7 +32,7 @@ public class TestSqlite
 			statement.executeUpdate("DROP TABLE IF EXISTS MensagensDeRegistro");
 			statement.executeUpdate("DROP TABLE IF EXISTS Mensagens");
 			statement.executeUpdate("DROP TABLE IF EXISTS grupo");
-			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING,grupoId INTEGER"+
+			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING,grupoId INTEGER,certificado BLOB"+
 					", FOREIGN KEY(grupoId) REFERENCES grupo(id))");
 			statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER PRIMARY KEY, descricao STRING)");
 			statement.executeUpdate("CREATE TABLE Mensagens (data TEXT, MRId INTEGER, UsuarioId INTEGER"+
@@ -178,7 +178,7 @@ public class TestSqlite
 	public void InsertMensagens(Statement statement) throws SQLException
 	{
 		
-		statement.executeUpdate("INSERT INTO Mensagens (id,descricao)"+
+		statement.executeUpdate("INSERT INTO MensagensDeRegistro (id,descricao)"+
 				"values(1001,'Sistema iniciado.'),"+
 				"(1002,'Sistema encerrado.'),"+
 				"(2001,'Autenticação etapa 1 iniciada.'),"+

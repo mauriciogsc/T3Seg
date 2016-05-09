@@ -1,18 +1,13 @@
 package telas;
 import sistema.TestSqlite;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
-import javafx.scene.control.ComboBox;
-
-import javax.security.auth.callback.ConfirmationCallback;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;

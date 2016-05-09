@@ -30,21 +30,19 @@ import javax.crypto.SecretKey;
 
 	public class VerificaChavePrivada {
 
-	private static boolean VerificaChave() {
+	public static boolean VerificaChave(File chave,String frase) {
 		  try 
 	        {
 
 	        	byte[] texto;
-	        	File file = new File("Keys/userpriv-pkcs8-pem-des.key");
-	            FileInputStream fis = new FileInputStream(file);
-	            texto = new byte[(int) file.length()];
+	            FileInputStream fis = new FileInputStream(chave);
+	            texto = new byte[(int) chave.length()];
 	            fis.read(texto);
 	            fis.close();
 	            
-
 	            KeyGenerator keyGen = KeyGenerator.getInstance("DES");
 	            SecureRandom random = SecureRandom.getInstance("SHA1PRNG"); // cryptograph. secure random 
-	            random.setSeed("teste123".getBytes());
+	            random.setSeed(frase.getBytes());
 	            keyGen.init(56,random); 
 	            SecretKey key = keyGen.generateKey();
 	            
@@ -77,7 +75,6 @@ import javax.crypto.SecretKey;
 	            return s.verify(teste);
 	            
 	        } catch (Exception e) {
-	            e.printStackTrace(System.err);
 	            return false;
 	        }
 	}

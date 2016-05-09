@@ -7,7 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+
 import java.awt.Rectangle;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
 
 public class MenuSistema extends JFrame implements ActionListener{
 
@@ -22,7 +30,9 @@ public class MenuSistema extends JFrame implements ActionListener{
 	private JLabel totalAcessos;
 	private JLabel menu;
 
-	public MenuSistema() {
+	private ResultSet currentUser;
+
+	public MenuSistema(ResultSet currentuSet) throws SQLException {
 
 		super();	   
 
@@ -39,7 +49,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 		JFrame frame = new JFrame();
 	}
 
-	private void createUserPanel()
+	private void createUserPanel() throws SQLException
 	{
 		JPanel parte1 = new JPanel();
 		parte1.setSize(200, 200);
@@ -70,8 +80,8 @@ public class MenuSistema extends JFrame implements ActionListener{
 		Listar.setMaximumSize(d);
 		Consultar.setMaximumSize(d);
 		Sair.setMaximumSize(d);
-		
-		login = new JLabel("admin");
+
+		login = new JLabel(currentUser.getString("login"));
 		grupo = new JLabel("grupo");
 		descricao = new JLabel("descricao tabajara");
 		totalAcessos = new JLabel("Acessos: 4");
