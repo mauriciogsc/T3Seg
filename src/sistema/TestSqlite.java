@@ -28,10 +28,15 @@ public class TestSqlite
 			statement.executeUpdate("DROP TABLE IF EXISTS usuario");
 			statement.executeUpdate("DROP TABLE IF EXISTS MensagensDeRegistro");
 			statement.executeUpdate("DROP TABLE IF EXISTS Mensagens");
-			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING)");
+			statement.executeUpdate("DROP TABLE IF EXISTS grupo");
+			statement.executeUpdate("CREATE TABLE usuario (id INTEGER PRIMARY KEY, login STRING, senha STRING, salt STRING, totalDeAcessos INTEGER, tentativas INTEGER,bloqueado INTEGER,dataBloqueio STRING,grupoId INTEGER"+
+					", FOREIGN KEY(grupoId) REFERENCES grupo(id))");
 			statement.executeUpdate("CREATE TABLE MensagensDeRegistro (id INTEGER PRIMARY KEY, descricao STRING)");
 			statement.executeUpdate("CREATE TABLE Mensagens (data TEXT, MRId INTEGER, UsuarioId INTEGER"+
 					", FOREIGN KEY(UsuarioId) REFERENCES usuario(id), FOREIGN KEY(MRId) REFERENCES MensagensDeRegistro(id))");
+			statement.executeUpdate("CREATE TABLE grupo (id INTEGER PRIMARY KEY,nome STRING)");
+
+			statement.executeUpdate("INSERT INTO grupo(nome) values('Administrador'),('Usuario')");
 			//int ids [] = {1,2,3,4,5};
 			//String names [] = {"Peter","Pallar","William","Paul","James Bond"};
 
@@ -106,7 +111,7 @@ public class TestSqlite
 			String salt = getSalt();	
 			String password = setPsw("03592419" + salt);
 			
-			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado) values('admin', '"+password+"', '"+salt+"', 0, 0,0)");
+			statement.executeUpdate("INSERT INTO usuario(login,senha,salt,totalDeAcessos,tentativas,bloqueado,grupoId) values('admin', '"+password+"', '"+salt+"', 0, 0,0,1)");
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
 		finally {         
