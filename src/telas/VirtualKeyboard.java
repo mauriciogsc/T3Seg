@@ -180,12 +180,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					{
 						System.out.println("HABEMUS ACESSO");
 						TelaDeCadastro cadastro = new TelaDeCadastro();
-						
-						cadastro.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-						cadastro.setLocation(300, 300);
-						cadastro.setSize(500, 150);      // set dimensions of window
-						cadastro.setVisible(true);
-						JFrame frame = new JFrame();
+						cadastro.start();
 					}
 				}
 				else
