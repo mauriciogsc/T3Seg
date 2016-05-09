@@ -124,6 +124,7 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 					}
 					else
 					{
+						JOptionPane.showMessageDialog(null, "Verificação falhou.");
 						if (tentativas.equals("3"))
 						{
 							SimpleDateFormat dtFormat = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
