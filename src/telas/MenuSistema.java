@@ -1,21 +1,13 @@
 package telas;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import java.awt.Rectangle;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.ParseException;
 
 public class MenuSistema extends JFrame implements ActionListener{
 
@@ -84,7 +76,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 		login = new JLabel(currentUser.getString("login"));
 		grupo = new JLabel("grupo");
 		descricao = new JLabel("descricao tabajara");
-		totalAcessos = new JLabel("Acessos: 4");
+		totalAcessos = new JLabel(currentUser.getString("totalDeAcessos"));
 
 		menu = new JLabel("Menu Principal:");
 

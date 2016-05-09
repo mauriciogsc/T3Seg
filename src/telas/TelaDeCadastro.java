@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
@@ -31,7 +32,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 	private JLabel grupo_pt1;
 	private JLabel descricao;
 
-	private JLabel totalAcessos;
+	private JLabel totalUsuarios;
 	
 	// parte 2
 	private JLabel cadastro;
@@ -56,7 +57,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 	
 	private JButton btn_cadastro;
 
-	public TelaDeCadastro()
+	public TelaDeCadastro(ResultSet currentUser) throws SQLException
 	{
 		super("Cadastro");
 
@@ -72,11 +73,11 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 		parte2.setLayout(new GridLayout(0,2));
 				
-		loginLabel_pt1 = new JLabel("login que peguei do banco");
+		loginLabel_pt1 = new JLabel(currentUser.getString("login"));
 		grupo_pt1 = new JLabel("pegar o grupo do banco");
 		
 		descricao = new JLabel("descricao q tava no banco");
-		totalAcessos = new JLabel("Acessos: 4");
+		totalUsuarios = new JLabel("Usuarios: ");
 
 		cadastro = new JLabel("Formulário de Cadastro");
 
@@ -86,7 +87,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 		parte1.add(new JLabel(" "));
 		parte1.add(new JLabel(" "));
-		parte1.add(totalAcessos);
+		parte1.add(totalUsuarios);
 
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setDividerSize(2);

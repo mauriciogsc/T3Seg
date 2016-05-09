@@ -179,7 +179,7 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					else
 					{
 						System.out.println("HABEMUS ACESSO");
-						TelaDeCadastro cadastro = new TelaDeCadastro();
+						TelaDeCadastro cadastro = new TelaDeCadastro(currentUser);
 						cadastro.start();
 					}
 				}
