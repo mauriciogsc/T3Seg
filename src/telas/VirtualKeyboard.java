@@ -169,11 +169,10 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 					if (!(status || status2))
 					{
-						System.out.println("NÃO HABEMUS ACESSO");
 						String tentativas = Integer.toString(currentUser.getInt("tentativas")+1);
 						if (tentativas.equals("3"))
 						{
-							statement.executeUpdate("UPDATE usuario SET bloqueado= 1, tentativas= 0, dataBloqueio='"+dtFormat.format(dt)+"'  where login='"+user+"'");
+							statement.executeUpdate("UPDATE usuario SET bloqueado= 1, tentativas= 0, dataBloqueio='"+dtFormat.format(new Date())+"'  where login='"+user+"'");
 							
 							this.setVisible(false);
 						    dispose();
@@ -188,7 +187,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					}
 					else
 					{
-						System.out.println("HABEMUS ACESSO");
 						statement.executeUpdate("UPDATE usuario SET tentativas= 0 where login='"+login_user+"'");
 						this.setVisible(false);
 					    dispose();
