@@ -111,13 +111,11 @@ public class MenuSistema extends JFrame implements ActionListener{
 		}
 
 		// criando itens do menu 
-		Cadastrar = new JButton("Cadastrar um novo usuário");
 		Listar = new JButton("Listar chave privada e certificado digital");
 		Consultar = new JButton("Consultar pasta de arquivos secretos do usuário");
 		Sair = new JButton("Sair do Sistema");             
 
 		Dimension d = new Dimension(350,30);
-		Cadastrar.setMaximumSize(d);
 		Listar.setMaximumSize(d);
 		Consultar.setMaximumSize(d);
 		Sair.setMaximumSize(d);
@@ -126,12 +124,10 @@ public class MenuSistema extends JFrame implements ActionListener{
 
 		parte2.add(menu);
 		parte2.add(new JLabel(" "));
-		parte2.add(Cadastrar);
 		parte2.add(Listar);
 		parte2.add(Consultar);
 		parte2.add(Sair);
 
-		Cadastrar.addActionListener(this);
 		Listar.addActionListener(this);
 		Consultar.addActionListener(this);
 		Sair.addActionListener(this);       

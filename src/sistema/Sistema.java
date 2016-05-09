@@ -21,9 +21,5 @@ public class Sistema {
 		LoginSistema system = new LoginSistema();
 		system.systemInit();
 		
-		/*
-		TelaDeConsulta tc = new TelaDeConsulta();
-		tc.start();
-		*/
 	}
 }
