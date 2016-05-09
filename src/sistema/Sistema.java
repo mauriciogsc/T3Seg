@@ -10,7 +10,7 @@ public class Sistema {
 
 	public static void main(String[] args) throws Exception {
 		
-		TestSqlite test = new TestSqlite();		
+		Banco test = new Banco();		
 		
 		try {
 			test.createDatabase();
@@ -18,7 +18,6 @@ public class Sistema {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		LoginSistema system = new LoginSistema();
 		system.systemInit();
 		

@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
 
-public class TestSqlite
+import com.sun.javafx.scene.paint.GradientUtils.Parser;
+
+public class Banco
 {	
 	public void createDatabase() throws Exception
 	{
@@ -186,6 +188,34 @@ public class TestSqlite
 
 		}
 		return salt;
+	}
+	
+	public static void InsertRegistro(int id, int userId)
+	{
+		Connection connection = null;
+		System.out.println(id);
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			if(userId==0)
+				statement.executeUpdate("INSERT INTO Mensagens(MRId) values("+Integer.toString(id)+")");
+			else
+				statement.executeUpdate("INSERT INTO Mensagens(MRId,UsuarioId) values("+Integer.toString(id)+","+Integer.toString(userId)+")");
+				
+			 
+		}
+		catch(SQLException e){  System.err.println(e.getMessage());} 
+		finally{
+			try {
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
+		}
 	}
 
 	public void InsertMensagens(Statement statement) throws SQLException

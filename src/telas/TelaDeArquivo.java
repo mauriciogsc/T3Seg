@@ -13,6 +13,7 @@ import java.sql.Statement;
 
 import javax.swing.*;
 
+import sistema.Banco;
 import sistema.VerificaChavePrivada;
 
 public class TelaDeArquivo extends JFrame implements ActionListener{

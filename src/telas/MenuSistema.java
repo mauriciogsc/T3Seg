@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import sistema.Banco;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

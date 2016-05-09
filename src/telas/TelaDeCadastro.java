@@ -1,5 +1,5 @@
 package telas;
-import sistema.TestSqlite;
+import sistema.Banco;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -183,6 +183,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 
 	public void start()
 	{
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocation(300, 300);
 		this.setSize(450, 450);      // set dimensions of window
@@ -249,7 +250,7 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 					}
 				}
 
-				TestSqlite teste = new TestSqlite();
+				Banco teste = new Banco();
 
 				try {
 					teste.createUser(login, password,grupoId,pathCert,nome);

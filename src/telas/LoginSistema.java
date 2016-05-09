@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import sistema.Banco;
+
 public class LoginSistema {
 
 	private String login;
@@ -46,18 +48,25 @@ public class LoginSistema {
 				{
 					String user_login = resultSet.getString("login");
 					int user_id = resultSet.getInt("id");
-					// iterate & read the result set
-					System.out.println("name = " + user_login);
-					System.out.println("id = " + user_id);
-
-					VirtualKeyboard typingTutor = new VirtualKeyboard(user_login);   
-
-					typingTutor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					typingTutor.setLocation(300, 300);
-					typingTutor.setSize(400, 200);    
-					typingTutor.setVisible(true);
-					JFrame frame = new JFrame();
-					
+					int bloqueado = resultSet.getInt("bloqueado");
+					if(bloqueado==1)
+					{
+						JOptionPane.showMessageDialog(null, "Usuário bloqueado.");
+					}
+					else
+					{
+						// iterate & read the result set
+						System.out.println("name = " + user_login);
+						System.out.println("id = " + user_id);
+	
+						VirtualKeyboard typingTutor = new VirtualKeyboard(user_login);   
+	
+						typingTutor.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+						typingTutor.setLocation(300, 300);
+						typingTutor.setSize(400, 200);    
+						typingTutor.setVisible(true);
+						JFrame frame = new JFrame();
+					}
 				}
 				else 
 				{
@@ -65,7 +74,7 @@ public class LoginSistema {
 				}
 			}
 			catch(SQLException e){  System.err.println(e.getMessage()); }       
-			finally {         
+			finally {  
 				try {
 					if(connection != null)
 						connection.close();

@@ -56,7 +56,7 @@ import javax.crypto.SecretKey;
 	            KeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(privKey.getBytes()));
 	            PrivateKey privateKey = keyFact.generatePrivate(keySpec);
 	            
-	            TestSqlite bd = new TestSqlite();
+	            Banco bd = new Banco();
 	            ByteArrayInputStream fin = new ByteArrayInputStream(bd.getCertificado(login));
 	            CertificateFactory f = CertificateFactory.getInstance("X.509");
 	            X509Certificate certificate = (X509Certificate)f.generateCertificate(fin);
