@@ -162,8 +162,12 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 					int size = password.length();
 					String senhaAtual="";
 					boolean status = generateCombinations(0, 0, size, senhaAtual, fullPassword, salt, currentPsw);
+					
+					boolean status2 = false;
+					if(!status)
+						status2 = generateCombinations(0, 1, size, senhaAtual, fullPassword, salt, currentPsw);
 
-					if (!status)
+					if (!(status || status2))
 					{
 						System.out.println("NÃO HABEMUS ACESSO");
 						String tentativas = Integer.toString(currentUser.getInt("tentativas")+1);
@@ -244,7 +248,6 @@ public class VirtualKeyboard extends JFrame implements ActionListener
 
 			//transformando o conteudo do arquivo em digest do tipo informado
 			MessageDigest mDigest = MessageDigest.getInstance("MD5");
-
 			//criando o digest e salvando
 			texto = senha.getBytes();
 			mDigest.update(texto);
