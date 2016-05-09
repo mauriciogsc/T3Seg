@@ -270,8 +270,11 @@ public class TelaDeCadastro extends JFrame implements ActionListener{
 				warning.setText("Cadastro Concluído");
 				warning.setVisible(true);
 
+				jtf_name.setText("");
 				jtf_login.setText(login);
 				jpf_password.setText(password);
+				jpf_confirmation.setText(password);
+				jtf_caminho.setText("");
 
 			}
 		}

@@ -34,7 +34,9 @@ public class MenuSistema extends JFrame implements ActionListener{
 		super("Menu Principal");	 
 
 		this.currentUser = currentuSet;
-		createUserPanel();
+
+		if (this.currentUser.equals("admin")) createAdminPanel();
+		else createUserPanel();
 
 	}
 
@@ -157,26 +159,55 @@ public class MenuSistema extends JFrame implements ActionListener{
 		splitPane.setTopComponent(parte1);
 		splitPane.setBottomComponent(parte2);
 
+		// create a database connection
+		Connection connection = null;
+		try{
+			connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+			ResultSet resultSet = statement.executeQuery("SELECT * from usuario where login = '"+currentUser+"'");
+			if(resultSet.next()) // false se o login n existir na tabela
+			{
+				String user_login = resultSet.getString("login");
+
+				login = new JLabel(user_login);
+				grupo = new JLabel(resultSet.getString("grupoId"));
+				descricao = new JLabel("descricao tabajara");
+				totalAcessos = new JLabel(resultSet.getString("totalDeAcessos"));
+
+				parte1.add(login);
+				parte1.add(grupo);
+				parte1.add(descricao);
+
+				parte1.add(new JLabel(" "));
+				parte1.add(new JLabel(" "));
+				parte1.add(totalAcessos);
+
+				currentUser = user_login;
+
+			}
+		}
+		catch(SQLException e){  System.err.println(e.getMessage()); }       
+		finally {  
+			try {
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e) {  // Use SQLException class instead.          
+				System.err.println(e); 
+			}
+		}
+
+
 		// criando itens do menu 
 		Cadastrar = new JButton("Cadastrar um novo usuário");
 		Listar = new JButton("Listar chave privada e certificado digital");
 		Consultar = new JButton("Consultar pasta de arquivos secretos do usuário");
 		Sair = new JButton("Sair do Sistema");             
 
-		login = new JLabel("admin");
-		grupo = new JLabel("grupo");
-		descricao = new JLabel("descricao tabajara");
-		totalAcessos = new JLabel("Acessos: 4");
-
 		menu = new JLabel("Menu Principal:");
-
-		parte1.add(login);
-		parte1.add(grupo);
-		parte1.add(descricao);
-
-		parte1.add(new JLabel(" "));
-		parte1.add(new JLabel(" "));
-		parte1.add(totalAcessos);
 
 		parte2.add(menu);
 		parte2.add(new JLabel(" "));
@@ -235,7 +266,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 		else if(menuItem.equals("Sair do Sistema"))
 		{
 			System.out.println("SAIR");
-			
+
 			try {
 				this.setVisible(false);
 				dispose();
@@ -245,7 +276,7 @@ public class MenuSistema extends JFrame implements ActionListener{
 				ts.start();				
 
 				return;
-				
+
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
