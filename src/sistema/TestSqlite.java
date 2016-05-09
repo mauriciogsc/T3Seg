@@ -84,7 +84,7 @@ public class TestSqlite
 
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
-			 ResultSet resultSet = statement.executeQuery("SELECT certificado from usuario where login='"+login+"'");
+			 ResultSet resultSet = statement.executeQuery("SELECT certificado FROM usuario WHERE login='"+login+"'");
 			 
 			  if(resultSet.next())
 			  {
@@ -144,8 +144,10 @@ public class TestSqlite
 			prepStat.setString(1, password);
 			prepStat.setString(2, salt);
             File fil = new File("Keys/usercert-x509.crt");
+            byte[] cert = new byte[(int)fil.length()];
             FileInputStream fin = new FileInputStream(fil);
-			prepStat.setBlob(3,fin);
+            fin.read(cert);
+			prepStat.setBytes(3,cert);
 			prepStat.executeUpdate();
 		}
 		catch(SQLException e){  System.err.println(e.getMessage()); }       
