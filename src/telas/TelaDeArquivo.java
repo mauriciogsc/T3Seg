@@ -28,7 +28,7 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 	private String currentUser;
 	private ResultSet user_bd;
 
-	public TelaDeArquivo(String currentUString)
+	public TelaDeArquivo(String currentUser)
 	{
 		super("Pegar Arquivo");
 
@@ -74,7 +74,6 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 		if (button.equals("Pegar Arquivo"))
 		{
 
-			System.out.println("aqr");
 			int returnVal = fc.showOpenDialog(TelaDeArquivo.this);
 			String login_user;
 
@@ -95,10 +94,8 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 					if(user_bd.next())
 					{
 						login_user = user_bd.getString("login");
-
-
 						if (VerificaChavePrivada.VerificaChave(file, phrase, login_user)){
-
+							System.out.println("OK VERIFICACAO");
 
 							String acessos = Integer.toString(user_bd.getInt("totalDeAcessos")+1);
 							statement.executeUpdate("UPDATE usuario SET tentativas= '"+acessos+"' where login='"+login_user+"'");
@@ -107,7 +104,8 @@ public class TelaDeArquivo extends JFrame implements ActionListener{
 
 							MenuSistema menu = new MenuSistema(user_bd);
 							menu.start();
-
+							
+							return;
 
 						}
 						else
